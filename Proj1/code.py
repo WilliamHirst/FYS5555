@@ -17,7 +17,7 @@ e = 0.31345
 Q = -1/3
 
 #Energy in Gev
-E_cm = 10
+E_cm = 200
 E = E_cm/2
 s = E_cm**2
 
@@ -51,8 +51,6 @@ Omega_t =  (g_ap**2 - g_bp**2)
 Omega_p =  (g_a**2 + g_b**2)
 Omega_tp =  (g_a**2 - g_b**2)
 
-
-#cos_theta = np.cos(np.arccos(np.linspace(-1,1,N)))
 cos_theta = np.linspace(-1,1,N)
 
 def Xi():
@@ -78,14 +76,14 @@ def calcCrossSection(*args):
 
 plt.figure(num=0, dpi=80, facecolor='w', edgecolor='k')
 
-data = np.loadtxt("data/10Gev.txt", skiprows=3)
+data = np.loadtxt("data/200Gev.txt", skiprows=3)
 compHepCos = data[:, 0]
 compHepCross = data[:, 1]
 
-plt.plot(cos_theta, calcCrossSection(M_g,M_z,M_gz), label = r"$M_{tot}$")
-#plt.plot(cos_theta, calcCrossSection(M_g), label = r"$M_{\gamma}$")
-#plt.plot(cos_theta, calcCrossSection(M_z), label = r"$M_{z}$")
-#plt.plot(cos_theta, calcCrossSection(M_gz), label = r"$2M_{\gamma,z}$")
+plt.plot(cos_theta, calcCrossSection(M_g,M_z,M_gz), label = r"$Total$")
+plt.plot(cos_theta, calcCrossSection(M_g), label = r"$QED$")
+plt.plot(cos_theta, calcCrossSection(M_z), label = r"$EW$")
+plt.plot(cos_theta, calcCrossSection(M_gz), label = r"$2\times Cross-term$")
 plt.plot(compHepCos,compHepCross, "--", label = "Comp Hep")
 
 plt.legend(fontsize = 15)
@@ -93,7 +91,7 @@ plt.xlabel(r"$\cos(\theta)$", fontsize=15)
 plt.ylabel(r"$d\sigma/dcos\theta$  [pb/rad]", fontsize=15)
 plt.title("Differential Cross section with"r"$\sqrt{s}$"f"= {E_cm} for " + r"$\mu^-,\mu^+ \rightarrow b,\bar{b}$", fontsize = 15)
 plt.tight_layout(pad=1.1, w_pad=0.7, h_pad=0.2)
-plt.savefig("articles/10_comp.pdf")
+plt.savefig("articles/200.pdf")
 plt.show()
 
 
@@ -135,7 +133,10 @@ cross = totCross(M_g,M_z, M_gz)
 max = np.max(cross)
 
 plt.figure(num=0, dpi=80, facecolor='w', edgecolor='k')
-plt.plot(E_cm_Arr, cross, label = r"$M_{tot}$")
+plt.plot(E_cm_Arr, cross, label = r"$Analytical$")
+#plt.plot(E_cm_Arr, totCross(M_g),label = "QED")
+#plt.plot(E_cm_Arr, totCross(M_z),label = "EW")
+
 plt.plot(compHepE,compHepCS, "--", label = "Comp Hep")
 plt.plot(E_cm_Arr[np.where(cross == max)], max,  "x", markersize = 10, linewidth = 10, \
             label = f"Energy at peak:{E_cm_Arr[np.where(cross == max)][0]:.2f}")
@@ -183,9 +184,9 @@ Q = -1/3
 
 plt.figure(num=0, dpi=80, facecolor='w', edgecolor='k')
 
-plt.plot(E_cm_Arr, asymmetry(M_g,M_z, M_gz), label = r"$M_{tot}$")
-plt.plot(E_cm_Arr, asymmetry(M_g), label = r"$M_{\gamma}$")
-plt.plot(E_cm_Arr, asymmetry(M_z), label = r"$M_{z}$")
+plt.plot(E_cm_Arr, asymmetry(M_g,M_z, M_gz), label = r"$Total$")
+plt.plot(E_cm_Arr, asymmetry(M_g), label = r"$QED$")
+plt.plot(E_cm_Arr, asymmetry(M_z), label = r"$EW$")
 plt.plot(compHepE,compHepAs, "--", label = "Comp Hep")
 
 plt.xlabel(r"$\sqrt{s} [Gev]$", fontsize=14)
@@ -213,9 +214,9 @@ compHepAs = data[:, 1]
 
 plt.figure(num=0, dpi=80, facecolor='w', edgecolor='k')
 
-plt.plot(E_cm_Arr, asymmetry(M_g,M_z, M_gz), label = r"$M_{tot}$")
-plt.plot(E_cm_Arr, asymmetry(M_g), label = r"$M_{\gamma}$")
-plt.plot(E_cm_Arr, asymmetry(M_z), label = r"$M_{z}$")
+plt.plot(E_cm_Arr, asymmetry(M_g,M_z, M_gz), label = r"$Total$")
+plt.plot(E_cm_Arr, asymmetry(M_g), label = r"$QED$")
+plt.plot(E_cm_Arr, asymmetry(M_z), label = r"$EW$")
 plt.plot(compHepE,compHepAs, "--", label = "Comp Hep")
 
 plt.xlabel(r"$\sqrt{s} [Gev]$", fontsize=14)
@@ -243,9 +244,9 @@ compHepAs = data[:, 1]
 
 plt.figure(num=0, dpi=80, facecolor='w', edgecolor='k')
 
-plt.plot(E_cm_Arr, asymmetry(M_g,M_z, M_gz), label = r"$M_{tot}$")
-plt.plot(E_cm_Arr, asymmetry(M_g), label = r"$M_{\gamma}$")
-plt.plot(E_cm_Arr, asymmetry(M_z), label = r"$M_{z}$")
+plt.plot(E_cm_Arr, asymmetry(M_g,M_z, M_gz), label = r"$Total$")
+plt.plot(E_cm_Arr, asymmetry(M_g), label = r"$QED$")
+plt.plot(E_cm_Arr, asymmetry(M_z), label = r"$EW$")
 plt.plot(compHepE,compHepAs, "--", label = "Comp Hep")
 
 plt.xlabel(r"$\sqrt{s} [Gev]$", fontsize=14)
