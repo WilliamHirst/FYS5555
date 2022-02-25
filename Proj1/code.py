@@ -228,7 +228,9 @@ plt.savefig("articles/Asymmtry_cC.pdf")
 plt.show()
 
 """
-m,M -> e,E
+m,M -> e,E 
+Factor of 3 in asymmetry() should be excluded in this case,
+but will not effect result given the denominator.
 """
 g_a = -0.04*0.5
 g_b = -0.5*0.5
