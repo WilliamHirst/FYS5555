@@ -259,6 +259,37 @@ plt.tight_layout(pad=1.1, w_pad=0.7, h_pad=0.2)
 plt.savefig("articles/Asymmtry_eE.pdf")
 plt.show()
 
+"""
+m,M -> m,M 
+"""
+g_a = g_ap
+g_b = g_bp
+g_tot = g_ap*g_bp*g_a*g_b 
+Omega_p =  (g_a**2 + g_b**2)
+Omega_tp =  (g_a**2 - g_b**2)
+m_b = m_m
+Q = -1
+
+data = np.loadtxt("data/Asymmetry_mM.txt", skiprows=3)
+compHepE = data[:, 0]
+compHepAs = data[:, 1]
+
+plt.figure(num=0, dpi=80, facecolor='w', edgecolor='k')
+
+plt.plot(E_cm_Arr, asymmetry(M_g,M_z, M_gz), label = r"$Total$")
+plt.plot(E_cm_Arr, asymmetry(M_g), label = r"$QED$")
+plt.plot(E_cm_Arr, asymmetry(M_z), label = r"$EW$")
+plt.plot(compHepE,compHepAs, "--", label = "Comp Hep")
+
+plt.xlabel(r"$\sqrt{s} [Gev]$", fontsize=14)
+plt.ylabel(r"$A_{FB}$", fontsize=14)
+plt.title("Forward-Backward Asymmetry  "+r"$\mu^-,\mu^+ \rightarrow \mu^-,\mu^+$", fontsize = 14)
+plt.legend(fontsize = 15)
+plt.tight_layout(pad=1.1, w_pad=0.7, h_pad=0.2)
+plt.savefig("articles/Asymmtry_mM.pdf")
+plt.show()
+
+
 
 """
 Z-prime plots
