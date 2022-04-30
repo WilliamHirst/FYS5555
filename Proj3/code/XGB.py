@@ -9,7 +9,6 @@ nrEvent, nrFeatures = data.shape
 print(f"| Features: {nrFeatures}, Events: {nrEvent:.2e}|")
 
 
-
 Y =  np.array(data.label)
 X = np.array(data.drop(["label"],axis=1))
 w_train = np.array(data.weight)
@@ -17,7 +16,7 @@ w_train = np.array(data.weight)
 nrS = np.sum(Y == 1)
 nrB = sum(Y == 0)
 print(f"|   B: {nrB:.2e}   S: {nrS:.2e}   |")
-X_train, X_val, Y_train, Y_val = train_test_split(X, Y, test_size=0.2)
+X_train, X_val, Y_train, Y_val = train_test_split(X, Y, test_size=0.2, random_state=2)
 
 w_train = X_train[:,-2]
 w_val = X_val[:,-2]
