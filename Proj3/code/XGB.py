@@ -60,11 +60,11 @@ n, bins, patches = plt.hist(y_pred_prob[:,1][Y_val==0], 10, facecolor='blue', al
 n, bins, patches = plt.hist(y_pred_prob[:,1][Y_val==1], 10, facecolor='red', alpha=0.2, label="Signal", weights = wsig_v,density=True)#, density=True)
 plt.xlabel('XGBoost output',fontsize=14)
 plt.ylabel('Events',fontsize=14)
-plt.title('XGBoost output, HiggsML dataset, validation data',fontsize=14)
+plt.title('XGBoost output, MC-data, validation data',fontsize=14)
 plt.grid(True)
 plt.legend(fontsize=12)
 plt.yscale('log')
-#plt.savefig("../figures/XGB/OutDistFewerCuts.pdf", bbox_inches="tight")
+plt.savefig("../figures/XGB/OutDistExtraCuts.pdf", bbox_inches="tight")
 plt.show()
 
 fpr, tpr, thresholds = roc_curve(Y_val,y_pred_prob[:,1], pos_label=1)

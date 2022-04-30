@@ -35,7 +35,7 @@ class Dataset:
         plt.tight_layout(pad=1.1, w_pad=0.7, h_pad=0.2)
         sns.heatmap(self.dataframe_feats.corr().round(2), annot=False, cmap="RdBu")
 
-        plt.savefig("../figures/Data/corre_allfeats.png")
+        plt.savefig("../figures/data/corre_allfeats.png")
         plt.show()
 
     def massSignalBackground(self, feature, ax):
@@ -61,7 +61,7 @@ class Dataset:
             self.massSignalBackground(labels[i], ax)
         ax.legend(["Background", "Signal"], fontsize = 12)
         plt.tight_layout(pad=1.0, w_pad=0.5)
-        plt.savefig("../figures/Data/featureHisto.png")
+        plt.savefig("../figures/data/featureHisto.png")
         plt.show()     
     
     def plotManyBoxes(self, labels):
@@ -73,7 +73,7 @@ class Dataset:
                 last = True
             self.box_plot(ax,labels[i],last)
         plt.tight_layout(pad=1.0, w_pad=0.5)
-        plt.savefig("../figures/Data/featureBoxes.png")
+        plt.savefig("../figures/data/featureBoxes.png")
         plt.show()   
 
     def box_plot(self, ax, feature,last):
@@ -142,5 +142,5 @@ if __name__ == "__main__":
     data_obj.featurePlot()
     data_obj.correlationPlot()
     data_obj.barPlot()
-    data_obj.plotManyFeature(np.array([0,1,2,3,4,5,6,7,8,9,10]))
-    data_obj.plotManyBoxes(np.array([0,1,2,3,4,5,6,7,8,9,10]))
+    data_obj.plotManyFeature(np.array([0,1,3,4,5,6,8,9,10]))
+    data_obj.plotManyBoxes(np.array([0,1,3,4,5, 6,8,9,10]))
