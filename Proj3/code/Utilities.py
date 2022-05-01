@@ -1,17 +1,33 @@
 # Import headers 
+import pandas as pd
+import numpy as np
+
+# XGBoost
+from xgboost import XGBClassifier
+
+# Sklearn tools 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import roc_curve,auc
-import pandas as pd
-import numpy as np
-import scikitplot as skplt
+from scipy.stats import randint as sp_randint
+from scipy.stats import uniform as sp_uniform
+from sklearn.model_selection import RandomizedSearchCV 
 
+# Keras tools
+import tensorflow as tf
+from tensorflow.keras import optimizers
+import keras_tuner as kt
+
+# Loading and dumping models.
+import joblib
+from joblib import dump, load
+import os
 
 # Plotting settings
 import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+import scikitplot as skplt
 
 plt.style.use("bmh")
 sns.color_palette("hls", 1)

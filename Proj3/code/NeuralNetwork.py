@@ -1,8 +1,6 @@
 from Utilities import *
-import tensorflow as tf
-from tensorflow.keras import optimizers
-import keras_tuner as kt
 tf.random.set_seed(1)
+
 
 preformGS = ask("Preform gird search? [y/n]")
 
@@ -17,7 +15,7 @@ def gridSearch(X,Y):
         overwrite=True,
     )
 
-    tuner.search(X, Y, epochs=10,batch_size = 25000, validation_split = 0.2)
+    tuner.search(X, Y, epochs=10, batch_size = 25000, validation_split = 0.2)
     best_hps = tuner.get_best_hyperparameters(num_trials=1)[0]
 
     print(
@@ -27,11 +25,8 @@ def gridSearch(X,Y):
     is {best_hps.get('learning_rate')}.
     """
     )
-    if  ask("Do you want to save model? (y/n) "):
-        tuner.hypermodel.build(best_hps).save("../models/NeuralNetwork/hyperModel.h5")
-        print("Model saved")
-    else:
-        print("Model not saved")
+    return tuner.hypermodel.build(best_hps)
+
 
 
 def model_builder(hp):
@@ -98,11 +93,11 @@ sum_wbkg = sum( wbkg )
 if preformGS:
     global XSize 
     XSize = len(X[0])
-    gridSearch(X_train,Y_train)
-else:
-    #model = tf.keras.models.load_model(f"../models/NeuralNetwork/hyperModel.h5")
-    initializer = tf.keras.initializers.HeUniform(seed = 1)
+    model = gridSearch(X_train,Y_train)
 
+else:
+    initializer = tf.keras.initializers.HeUniform(seed = 1)
+    # kernel_initializer=initializer,
     model = tf.keras.Sequential(
         [
             tf.keras.layers.Dense(
@@ -126,41 +121,49 @@ else:
     optimizer = optimizers.Adam(learning_rate=learning_rate)
 
     model.compile(loss="binary_crossentropy", optimizer=optimizer, metrics=["accuracy"])
-    print("|            Training...           |")
 
-    model.fit(X_train,Y_train, epochs = 100, batch_size = 25000) 
 
-    print("|          Finished traing         |")
-    print(" ---------------------------------- ")
-    y_pred_prob = model.predict( X_val ) 
+print("|            Training...           |")
 
-    plt.figure(num=0, dpi=80, facecolor='w', edgecolor='k')
-    n, bins, patches = plt.hist(y_pred_prob[Y_val==0], bins = np.linspace(0,1.,15), facecolor='blue', alpha=0.2,label="Background",density=True)# weights = wbkg_v)#, density=True)
-    n, bins, patches = plt.hist(y_pred_prob[Y_val==1], bins = np.linspace(0,1.,15), facecolor='red', alpha=0.2, label="Signal",density=True)# weights = wsig_v,density=True)#, density=True)
-    plt.xlabel('XGBoost output',fontsize=14)
-    plt.ylabel('Events',fontsize=14)
-    plt.title('Neural network output, MC-data, validation data',fontsize=14)
-    plt.grid(True)
-    plt.legend(fontsize=12)
-    plt.yscale('log')
-    plt.ylim(bottom=1e-3)  # adjust the bottom leaving top unchanged
-    plt.xlim([0.01,1.01])
-    if ask("Save Image? [y/n]"):
-        plt.savefig("../figures/NeuralNetwork/OutDistExtraCuts_NI.pdf", bbox_inches="tight")
-    plt.show()
+model.fit(X_train,Y_train, epochs = 100, batch_size = 25000) 
 
-    fpr, tpr, thresholds = roc_curve(Y_val,y_pred_prob, pos_label=1)
-    roc_auc = auc(fpr,tpr)
-    plt.figure()
-    lw = 2
-    plt.plot(fpr, tpr, color='darkorange',
-            lw=lw, label='ROC curve (area = %0.2f)' % roc_auc)
-    plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
-    plt.xlim([0.0, 1.0])
-    plt.ylim([0.0, 1.05])
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate')
-    plt.title('ROC for xgBoost on MC-dataset')
-    plt.legend(loc="lower right")
-    plt.show()
+print("|          Finished traing         |")
+print(" ---------------------------------- ")
+y_pred_prob = model.predict( X_val ) 
 
+plt.figure(num=0, dpi=80, facecolor='w', edgecolor='k')
+n, bins, patches = plt.hist(y_pred_prob[Y_val==0], bins = np.linspace(0,1.,15), facecolor='blue', alpha=0.2,label="Background",density=True)# weights = wbkg_v)#, density=True)
+n, bins, patches = plt.hist(y_pred_prob[Y_val==1], bins = np.linspace(0,1.,15), facecolor='red', alpha=0.2, label="Signal",density=True)# weights = wsig_v,density=True)#, density=True)
+plt.xlabel('XGBoost output',fontsize=14)
+plt.ylabel('Events',fontsize=14)
+plt.title('Neural network output, MC-data, validation data',fontsize=14)
+plt.grid(True)
+plt.legend(fontsize=12)
+plt.yscale('log')
+plt.ylim(bottom=1e-3)  # adjust the bottom leaving top unchanged
+plt.xlim([0.01,1.01])
+if ask("Save Image? [y/n]"):
+    plt.savefig("../figures/NeuralNetwork/OutDistExtraCuts_NI.pdf", bbox_inches="tight")
+plt.show()
+
+fpr, tpr, thresholds = roc_curve(Y_val,y_pred_prob, pos_label=1)
+roc_auc = auc(fpr,tpr)
+plt.figure()
+lw = 2
+plt.plot(fpr, tpr, color='darkorange',
+        lw=lw, label='ROC curve (area = %0.2f)' % roc_auc)
+plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('ROC for xgBoost on MC-dataset')
+plt.legend(loc="lower right")
+plt.show()
+
+
+if  ask("Do you want to save model? (y/n) "):
+    model.save("../models/NeuralNetwork/hyperModel.h5")
+    print("Model saved")
+else:
+    print("Model not saved")
