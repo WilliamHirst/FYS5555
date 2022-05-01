@@ -1,5 +1,6 @@
 # Import headers 
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import roc_curve,auc
 import pandas as pd
 import numpy as np
@@ -46,3 +47,16 @@ def timer(start_time=None):
         thour, temp_sec = divmod((datetime.now() - start_time).total_seconds(), 3600)
         tmin, tsec = divmod(temp_sec, 60)
         print('\n Time taken: %i hours %i minutes and %s seconds.' % (thour, tmin, round(tsec, 2)))
+
+def ask(q):
+    state = True
+    
+    while state == True:
+        answ = input(q)
+        if answ == "y":
+            isYes = True
+            state = False
+        elif answ == "n":
+            isYes = False
+            state = False
+    return isYes
