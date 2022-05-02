@@ -78,6 +78,19 @@ def ask(q):
             state = False
     return isYes
 
-def get_Random_Sample(X, Y, N):
-    indx = random.sample(range(len(X)), N)
-    return X[indx], Y[indx]
+def splitData(X, Y, split):
+    X_train, X_val, Y_train, Y_val = train_test_split(X, Y, test_size=split, random_state=2)
+    s = X_train[Y_train==1]
+    b = X_train[Y_train==0]
+
+    indx = random.sample(range(len(b)), len(s))
+    re_indx = [i for i in range(len(b)) if i not in indx]
+
+    W_train = X[indx,-1]
+    W_val = X[re_indx,-1]
+    X_val = np.concatenate(X_val[:,-1], X_train[re_indx,-1], axis=0)
+    Y_val = np.concatenate(Y_val, Y_train[re_indx], axis=0)
+    X_train = X_train[indx,:-1]
+    Y_train = Y_train[indx]
+    
+    return X_train, X_val, Y_train, Y_val, W_train, W_val
