@@ -1,6 +1,6 @@
 from Utilities import *
 
-def gridSearch(X,Y,W):
+def gridSearch(X,Y):
     xgbclassifier = XGBClassifier(
                                 max_depth=3, 
                                 n_estimators=120,
@@ -20,7 +20,7 @@ def gridSearch(X,Y,W):
              }
 
     # run random search
-    n_iter_search = 10
+    n_iter_search = 50
     random_search = RandomizedSearchCV(xgbclassifier, 
                                     param_distributions=param_dist, 
                                     n_iter=n_iter_search,
@@ -28,7 +28,7 @@ def gridSearch(X,Y,W):
                                     n_jobs=4,
                                     cv=3,
                                     scoring='roc_auc')
-    random_search.fit(X, Y, sample_weight=W)
+    random_search.fit(X, Y)
 
     return random_search.best_estimator_
    
@@ -39,7 +39,7 @@ start_time = timer(None)
 print(" ")
 print(" ___________*XGBoost*___________")
 print("|      Reading CSV-file...      |")
-data = pd.read_csv("../data/MC_data.csv")
+data = pd.read_csv("../data/MC_data_gammel.csv")
 nrEvent, nrFeatures = data.shape
 print(f"| Features: {nrFeatures}, Events: {nrEvent:.2e}|")
 
@@ -53,9 +53,10 @@ print(f"|   B: {nrB:.2e}   S: {nrS:.2e}   |")
 
 X_train, X_val, Y_train, Y_val = train_test_split(X, Y, test_size=0.2, random_state=2)
 
-w_train = X_train[:,-2]
-w_val = X_val[:,-2]
+w_train = X_train[:,-1]
+w_val = X_val[:,-1]
 
+exit()
 X_train, X_val = X_train[:,:-1], X_val[:,:-1]
 
 # Weights
@@ -69,7 +70,7 @@ sum_wbkg = sum( wbkg )
 if preformGS:
     global XSize 
     XSize = len(X[0])
-    xgb = gridSearch(X_train,Y_train, w_train)
+    xgb = gridSearch(X_train,Y_train)
     print(xgb.get_xgb_params())
 
     
@@ -97,8 +98,8 @@ timer(start_time)
 y_pred_prob = xgb.predict_proba( X_val ) 
 
 plt.figure(num=0, dpi=80, facecolor='w', edgecolor='k')
-n, bins, patches = plt.hist(y_pred_prob[:,1][Y_val==0], bins = np.linspace(0,1.,15), facecolor='blue', alpha=0.2,label="Background", weights = wbkg_v,density=True)#, density=True)
-n, bins, patches = plt.hist(y_pred_prob[:,1][Y_val==1], bins = np.linspace(0,1.,15), facecolor='red', alpha=0.2, label="Signal", weights = wsig_v,density=True)#, density=True)
+n, bins, patches = plt.hist(y_pred_prob[:,1][Y_val==0], bins = np.linspace(0,1.,15), facecolor='blue', alpha=0.2,label="Background", weights = wbkg_v)#,density=True)#, density=True)
+n, bins, patches = plt.hist(y_pred_prob[:,1][Y_val==1], bins = np.linspace(0,1.,15), facecolor='red', alpha=0.2, label="Signal", weights = wsig_v)#,density=True)#, density=True)
 plt.xlabel('XGBoost output',fontsize=14)
 plt.ylabel('Events',fontsize=14)
 plt.title('XGBoost output, MC-data, validation data',fontsize=14)

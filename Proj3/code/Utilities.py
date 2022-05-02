@@ -1,6 +1,7 @@
 # Import headers 
 import pandas as pd
 import numpy as np
+from numpy import random
 
 # XGBoost
 from xgboost import XGBClassifier
@@ -76,3 +77,7 @@ def ask(q):
             isYes = False
             state = False
     return isYes
+
+def get_Random_Sample(X, Y, N):
+    indx = random.sample(range(len(X)), N)
+    return X[indx], Y[indx]
