@@ -79,9 +79,12 @@ def ask(q):
             state = False
     return isYes
 
+def removeNegWeights(weight):
+    P = np.sum(weight)/np.sum(np.abs(weight))
+    return P*np.abs(weight)
 
 
-def splitData(X, Y, split):
+def splitData(X, Y, split_v, isEven = True, split_b = None):
     X,Y = shuffle(X,Y, random_state=2)
 
     x_s = X[Y == 1]
@@ -91,27 +94,42 @@ def splitData(X, Y, split):
 
 
     rng = np.random.default_rng(seed=2)
-    indx = rng.choice(len(x_b), len(x_s), replace=False)
-    re_indx = [i for i in range(len(x_b)) if i not in indx]
 
-    split_indx  = int(len(x_s)*split)
+    if isEven:
+        size_b = len(x_s)
+    else:
+        size_b = int(len(x_b)*split_b)
+
+    
+    indx = rng.choice(len(x_b), size_b, replace=False)
+    
+    re_indx = np.delete(np.arange(len(x_b)), indx)
+
    
-    X_train = np.concatenate((x_s[:,:-1], x_b[indx,:-1]), axis=0)[split_indx:]
-    Y_train = np.concatenate((y_s, y_b[indx]))[split_indx:]
-    W_train = np.concatenate((x_s[:,-1], x_b[indx,-1]))[split_indx:]
+
+    split_indx  = int(len(x_s)*split_v)
+   
+    X_train = np.concatenate((x_s[:,:-1], x_b[indx,:-1]), axis=0)
+    Y_train = np.concatenate((y_s, y_b[indx]))
+    W_train = np.concatenate((x_s[:,-1], x_b[indx,-1]))
     W_train *= len(X_train)/len(Y)
 
-    X_val = shuffle(X_train, random_state=2)[0:split_indx]
-    Y_val = shuffle(Y_train, random_state=2)[0:split_indx]
-    W_val = shuffle(W_train, random_state=2)[0:split_indx]
+    X_train, Y_train, W_train = shuffle(X_train, Y_train, W_train, random_state=2)
+    X_train, Y_train, W_train = X_train[split_indx:], Y_train[split_indx:], W_train[split_indx:]
+    X_val, Y_val, W_val = X_train[0:split_indx], Y_train[0:split_indx], W_train[0:split_indx]
+    W_train *= len(X_train)/len(Y)
     W_val *= len(X_val)/len(Y)
 
-    W_test = x_b[re_indx,-1] 
-    X_test = x_b[re_indx,:-1]
-    Y_test = y_b[re_indx]
+    if not isEven:
+        W_train[Y_train == 0.0] *= np.sum(W_train[Y_train == 1 ]) / np.sum(W_train[Y_train == 0])
+        W_val[Y_val == 0.0] *= np.sum(W_val[Y_val == 1 ]) / np.sum(W_val[Y_val == 0])
+
+    W_test = x_b[:,-1]#[re_indx,-1] 
+    X_test = x_b[:,:-1]#[re_indx,:-1]
+    Y_test = y_b#[re_indx]
     W_test *= len(X_test)/len(Y)
-
-
+    
+    W_train = removeNegWeights(W_train)
     return X_train, X_val, X_test, Y_train, Y_val, Y_test, W_train, W_val, W_test
 
 def plotHistoBS(y_b, y_s, w_b, w_s, name, title,  nrBins = 15):

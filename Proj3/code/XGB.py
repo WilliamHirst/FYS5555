@@ -34,13 +34,13 @@ def gridSearch(X,Y):
     return random_search.best_estimator_
    
 
-preformGS = ask("Preform gird search? [y/n]")
+preformGS = False#ask("Preform gird search? [y/n]")
 
 start_time = timer(None)
 print(" ")
 print(" ___________*XGBoost*___________")
 print("|      Reading CSV-file...      |")
-data = pd.read_csv("../data/MC_data_gammel.csv")
+data = pd.read_csv("../data/MC_data_17.csv")
 nrEvent, nrFeatures = data.shape
 print(f"| Features: {nrFeatures}, Events: {nrEvent:.2e}|")
 
@@ -51,8 +51,10 @@ w_train = np.array(data.weight)
 nrS = np.sum(Y == 1)
 nrB = sum(Y == 0)
 print(f"|   B: {nrB:.2e}   S: {nrS:.2e}   |")
-
-X_train, X_val, X_test, Y_train, Y_val, Y_test, W_train, W_val, W_test= splitData(X,Y,0.2)
+print("|      Reading CSV-file...      |")
+print("|         Handling data         |")
+  
+X_train, X_val, X_test, Y_train, Y_val, Y_test, W_train, W_val, W_test= splitData(X,Y,0.25, isEven = False, split_b = 0.25)
 
 # Weights
 wbkg_t = [W_test[i] for i in range(len(Y_test)) if Y_test[i] == 0.0 ]
@@ -71,7 +73,7 @@ sum_wbkg = sum( wbkg )
 if preformGS:
     global XSize 
     XSize = len(X[0])
-    xgb = gridSearch(X_train,Y_train)
+    xgb = gridSearch(X_train,Y_train,W_train)
     print(xgb.get_xgb_params())
 
     
@@ -89,7 +91,7 @@ else:
                         eval_metric="error") 
 
     print("|          Training...          |")
-    xgb.fit(X_train,Y_train)
+    xgb.fit(X_train,Y_train, sample_weight = W_train )
 
     print("|        Finished traing        |")
     print(" ------------------------------- ")
@@ -122,6 +124,18 @@ plotHistoBS(y_b, y_s, wbkg_v, wsig_v, name, title,  nrBins = 15)
 title = "ROC for XGB on MC-dataset (valdiation)"
 plotRoc(Y_val, y_pred, title)
 
+
+data = pd.read_csv("../data/data.csv")
+nrEvent, nrFeatures = data.shape
+print(f"| Features: {nrFeatures}, Events: {nrEvent:.2e}|")
+
+X_data = np.array(data.drop(["label", "weight"],axis=1))
+
+y_b = xgb.predict_proba( X_data )[:,1]
+
+name = "../figures/XGB/test.pdf"
+title =  "XGB output, MC-data, test data"
+plotHistoB(y_b, wbkg_t, name, title,  nrBins = 15)
 
 """
 TEST DATA
