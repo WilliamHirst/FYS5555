@@ -103,12 +103,12 @@ def splitData(X, Y, split_v, isEven = True, split_b = None):
     X_train = np.concatenate((x_s[:,:-1], x_b[indx,:-1]), axis=0)
     Y_train = np.concatenate((y_s, y_b[indx]))
     W_train = np.concatenate((x_s[:,-1], x_b[indx,-1]))
-    W_train *= len(X_train)/len(Y)
+    #W_train *= len(X_train)/len(Y)
 
     X_train, Y_train, W_train = shuffle(X_train, Y_train, W_train, random_state=2)
     X_train, Y_train, W_train = X_train[split_indx:], Y_train[split_indx:], W_train[split_indx:]
     X_val, Y_val, W_val = X_train[0:split_indx], Y_train[0:split_indx], W_train[0:split_indx]
-    W_train *= len(X_train)/len(Y)
+    #W_train *= len(X_train)/len(Y)
     #W_val *= len(X_val)/len(Y)
 
     if not isEven:
@@ -155,6 +155,11 @@ def plotHistoB(y_b, w_b, name, title, threshold,  nrBins = 15):
 
 def plotRoc(Y, Y_pred, weights, title, return_score = False ):
     fpr, tpr, thresholds = roc_curve(Y,Y_pred[:,1], sample_weight = weights, pos_label=1)
+    sort_indx = sorted(range(len(fpr)), key=lambda k: fpr[k])
+    fpr = [fpr[i] for i in sort_indx]
+    tpr = [tpr[i] for i in sort_indx]
+    thresholds = [thresholds[i] for i in sort_indx]
+
     roc_auc = auc(fpr,tpr)
     lw = 2
 
