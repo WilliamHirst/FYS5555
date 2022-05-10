@@ -153,7 +153,7 @@ def plotHistoB(y_b, w_b, name, title, threshold,  nrBins = 15):
     plt.show()
 
 
-def plotRoc(Y, Y_pred, weights, title, return_score = False ):
+def plotRoc(Y, Y_pred, weights, title, return_score = False, name = None ):
     fpr, tpr, thresholds = roc_curve(Y,Y_pred[:,1], sample_weight = weights, pos_label=1)
     sort_indx = sorted(range(len(fpr)), key=lambda k: fpr[k])
     fpr = [fpr[i] for i in sort_indx]
@@ -173,6 +173,8 @@ def plotRoc(Y, Y_pred, weights, title, return_score = False ):
     plt.ylabel('True Positive Rate')
     plt.title(title)
     plt.legend(loc="lower right")
+    if ask("Save Image? [y/n]"):
+        plt.savefig(f"{name}", bbox_inches="tight")
     plt.show()
     if return_score:
         return fpr, tpr, thresholds
