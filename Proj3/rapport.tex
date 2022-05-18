@@ -33,6 +33,7 @@
 }
 
 
+
 \newcommand{\fsl}[1]{\ensuremath{\mathrlap{\!\not{\phantom{#1}}}#1}}% fsl{<symbol>}
 \usepackage{tikz} 
 \usetikzlibrary{shapes,arrows,positioning,automata,backgrounds,calc,er,patterns}
@@ -77,22 +78,26 @@
 \begin{center}
 \centering
 \textit{
-In this rapport I will be studying the higgs decay in a proton proton collision.  
+\lipsum[2]
 }
 \end{center}
 \section{Introduction}
-Some of the theory and ideas in this rapport are based on and will hope to build on the work by the ATLAS Collaboration  in 2013 \cite{ATLAS2012} and 2020 \cite{Aad_2020}. 
+The standard model (SM) is perhaps one of the most successful scientific theories ever created. It accurately explains the interactions of leptons and quark as well as well as the force carrying particles which mediate said interactions. In 2012 the SM achieved one of its crowning achievements when discovering the Higgs boson. Much of the accolade was rightfully given to the theoretical work on the SM, but, another aspect of the discovery was equally importan. Data analysis was and is a crucial part of any new discovery in physics. One of the most important and exiting tools is machine learning.
 \\
+When on the search for beyond standard model (BSM)-physics, one often aims to search in regions where one suspects to find it. The traditional approach is to define regions by preforming rectangle cuts on event variables. In the case that the BSM is significantly different from the SM, this can be quite successfully. But, in the case that the two are relatively similar, rectangle cuts will not suffice. Machine learning aims to apply cuts that in practice are not (or at least do not seem) rectangle, but are curved. One often speaks about the machine learning creating a complex, curved region in the phase space spanned by the events.
+\\
+In this rapport I will use a mixed approach of rectangle cuts and machine learning and compare it to a strict rectangle cut approach in their ability to search for new physics. BSM-physics which will be the focus of this rapport will be Super Symmetry\footnote{More on the motivation behind super symmetry in section \ref{sec:SUSY}}. The methods compared in this raport will be tested on their ability to provide new information about the real data, either it be discovery or exclusion.
+\\
+In the theory section I will discuss the basis strategy of the search, Super symmetry and why it is worth the search, the different background-channels which will contribute to the analysis, the machine learning algorithm of choice and the statistical framework used in analysing the results. In the implementation section I will further explain the different methods used in the analysis, how I have chosen to handle the data as well as the steps involved in applying the machine learning framework. The results and discussion section will present all cuts used in defining different regions, the results from training the classifier, the results from applying each region, the final results from each search and will discuss possible ways forward. Finally all results and discussion, will be summarised in the conclusion section.
 \section{Theory}
 In this section I will discuss the necessary theory for both the physical analysis (supersymmetry, statistical tools ect.) as well as the tools need for the ML analysis. Note that the sections on ML methods is taken from my previous work in the articles \cite{FYSSTK} and \cite{HIGGS}.
 \subsection{Basic search strategy}
-In most attempts to search for beyond the standard model (BSM) physics the basic idea is to define a new model of interest and compare Monte Carlo data (MC) with with real data in designated regions we call signal regions (SR). To define these SR we use MC-data. As will be made clearer in later section, we want to define signal regions as a region in feature space with the most amount of predicted MC-data of the BSM physics of choice (signal) and the least amount of SM MC-data (background). Defining these regions can sometimes be done through classical rectangle cuts in certain features. Using machine learning in such searches allows us to define more sophisticated cuts based on trends in the features space that might be not visible to the human eye.
-\subsection{Super symmetry}
+In most attempts to search for BSM-physics the basic idea is to define a new model of interest and compare Monte Carlo data (MC) with with real data in designated regions we call signal regions (SR). To define these SR we use MC-data. As will be made clearer in later section, we want to define signal regions as a region in feature space with the most amount of predicted MC-data of the BSM physics of choice (signal) and the least amount of SM MC-data (background). Defining these regions can sometimes be done through classical rectangle cuts in certain features. Using machine learning in such searches allows us to define more sophisticated cuts based on trends in the features space that might be not visible to the human eye.
+\subsection{Super symmetry}\label{sec:SUSY}
 A supersymmetric theory has for many years been an interesting candidate for a new physics beyond the standard model. Supersymmetry (SUSY) aims to alter the standard model such that mass and force is treated equally. Supersymmetry suggests that each SM particle has an additional superpartner(SP) which we call a sparticle. The sparticles all differs with half a spin from the original SM particle. Because SUSY is a broken symmetry, sparticles are expected to be much higher than the corresponding SM masses, often in the range of 100-1000GeV. The difference in spin means that the SP of a fermion is a boson and the SP of a boson is a fermion. SUSY is a candidate to fix many problems in physics, some of which are; the hierarchy problem, fixing the mass of the higgs and possibly the mystery of dark matter.
 \\
 In this analysis I have chosen to search for supersymmetry through the signal of two direct sleptons decaying to a lepton and a neutralino. The process closely resembles the Drell-Yan production, but with additional neutralinos. The diagram is shown in figure \ref{fig:signal_f}. In the rapport only the sleptons $\tilde{e}$ and $\tilde{\mu}$ (SP of ${e}$ and ${\mu}$) will be considered.
 \\
-In the paper from F. del Aguila and Ll. Ametller \cite{DELAGUILA1991326}, they argue that the slepton should be detectable at the LHC with masses up to 250GeV. In addition SUSY predicts that all SP will have masses between 100GeV-1Tev. Therefore the range of mass of the slepton in this analysis will be in the range of 100-250GeV.
 \begin{figure}[H]
     \centering
     \begin{tikzpicture}
@@ -144,7 +149,10 @@ In the paper from F. del Aguila and Ll. Ametller \cite{DELAGUILA1991326}, they a
     \caption{The Feynman diagram for the direct slepton signal channel.}
     \label{fig:signal_f}
 \end{figure}
+The different version of the direct slepton diagram are represented as different possibilities in the MC-data for the mass of the slepton and neutralinos. The masses of the slepton ranges from 100GeV to 700GeV and for the neutralinos the masses range from 1GeV to 300GeV.\\
 Why search for neutralinos? Version of SUSY suggest an introduction of a new quantum number, R parity. The new quantum number suggests that the lightest neutralions do not decay into SM particles. Given it is neutral, this makes it a prime candidate for DM.
+
+In this search
 \subsection{Standard model background}
 In the analysis of direct slepton signal there are several background channels of interest. In this rapport only a handful of the aforementioned channels were included in the rapport given the limits of computational power and time. The channels were included based on there relevance. 
 \subsubsection{Dibson ($WW,WZ,ZZ$)}
@@ -412,8 +420,8 @@ In figure \ref{fig:singletop} I have drawn the Feynman diagram of the single-top
     \caption{The Feynman diagram for singletop-channel.}
     \label{fig:singletop}
 \end{figure}
-\subsubsection{W/Z+Jets}
-In figure \ref{fig:WZ_jets} I have drawn one example of Feynman diagrams fro both the W- and Z+jets channel. The diagram shows two fermions that create a gluon and a Z- or W-boson through the t-channel. The gluon decays into a jet and the W- or Z-boson decays into a pair of leptons, either one or two charged. Normally in searches for direct sleptons, these channels can be easily cut. But, as will be discussed in later sections, the lack of certain features in the data will make the channels contribute an abnormal amount.
+\subsubsection{W/Z+Jets}\label{subsec:WZjets}
+In figure \ref{fig:WZ_jets} I have drawn one example of Feynman diagrams fro both the W- and Z+jets channel. The diagram shows two fermions that create a gluon and a Z- or W-boson through the t-channel. The gluon decays into a jet and the W- or Z-boson decays into a pair of leptons, either one or two charged. As is evident from the work made by ATLAS in articles like their work in 2020 \cite{Aad_2020}, normally in searches for direct sleptons, these channels can be easily cut. But, as will be discussed in later sections, the lack of certain features in the data will make the channels contribute an abnormal amount.
 \begin{figure}[H]
     \centering
     \begin{tikzpicture}
@@ -478,10 +486,51 @@ Using our new estimator $h_m$, we can now define a new model as
     \mathcal{F}_{m+1}(x_i) = \mathcal{F}_m + h_m (x_i).
 \end{align}
 The XGBoost \cite{XGB} framework used in this analysis enables a gradient-boosted algorithm, and was initially created for the Higgs ML challenge. Since the challenge, XGBoost has become a favorite for many in the ML community and has later won many other ML challenges. XGBoost often outperforms ordinary decision trees, but what is gains in results it looses in interpretability. A single tree can easily be analysed and dissected, but when the number of trees increases this becomes harder. 
-\subsection{Statistical analysis}
-\subsection{Regions}
-When using machine learning to detect new physics convention is often to define 3 regions; control, validation and signal (CR, VR, SR). We use the different output distribution of our ML method to define each region. The CR region is defined as the region with an output below a threshold, $\epsilon$. The validation region is defined as the region of output that best separates background and signal. This region is often used to validate the similarity between the MC and ATLAS data. Lastly the SR, defined as the region above the threshold. This region is used after the CR and VR to compare and the consequently detect any signal events between the MC and ATLAS data.
-\subsection{Confidence level and exclusion}
+\subsection{Discovery and exclusion}
+As mentioned in previous sections, the main idea of the search is to define a region where we will compare the MC-background to the data and analyse any differences. Any analysis in the signal region hopes to either discovery or exclude certain BSM physics. The usual way of doing so is through statistics. In this rapport the statistical analysis will not be the focus and will therefore not be explained in heavy detail. Nonetheless there are certain expressions and terms that must still be defined.
+\\
+In the sake of a discovery one would hope to see an excess in the data, measure its significance and find the model best fitting to the excess. A significance of a discovery is measured by the relation between the background and the apparent signal. Given a signal region with $n_{obs}$ events of real data and b events of MC background, we can define the signal as $s = n_{obs}-b$. Then a significance of any signal, $Z$ is defined as 
+\begin{align}
+    Z = \frac{n_{obs}-b}{\sqrt{b}},
+\end{align}
+or 
+\begin{align}
+    Z = \frac{s}{\sqrt{b}}.
+\end{align}
+Introducing the possibility of uncertainty in the amount of background, $\delta b$ we can further define
+\begin{align}\label{eq:Z}
+    Z = \frac{s}{\sqrt{b+(\delta b)^2}}.
+\end{align}
+In physics one often deems the results a discovery if $Z$ is larger than 5.  Given a significance with no indication of discovery, we move over to the intent of exclusion.\\
+In exclusion we are interested in studying the probability of a model which predicts a number of signal events s, given $n_{obs}$ real data events. To do so we will use Bayesian statistics.
+\\
+The probability of model predicting $s$ signal events in the signal region, given $n_{obs}$ event of real data is in bayesian statistics written as
+\begin{align}\label{eq:bays}
+    P(s|n_{obs}) = \frac{P(n_{obs}|s)P(s)}{P(n_{obs})}
+\end{align}
+Approximating the probability distribution with a Poisson distribution we can define this probability as
+\begin{align}\label{eq:Pns}
+    P(n_{obs}|s) = L(n_{obs},s)= (s+b)^{n_{obs}} \frac{e^{-(s+b)}}{n_{obs}!},
+\end{align}
+where b is the predicted background. 
+\\
+From this point we can define $s_{up}$ as being the upper limit of any signal, where any model that predicts $s>s_{up}$ is excluded. We define $s_{up}$ as
+\begin{align}
+    \int_0^{s_{up}} P(s|n_{obs})  = 0.95,
+\end{align}
+meaning that any $s>s_{up}$ is excluded within a $95\%$ confidence. If we assume flat prior both $P(n_{obs})$ and $P(s)$ are independent of s, and will act as normalization constants. Therefore we can calculate $s_{up}$ using equation \ref{eq:bays}. 
+\\
+To further extend this approach for HEP purposes we make the probability dependant of 4 parameters, the signal cross section $\sigma$, the background cross section $\sigma_{bkg}$,  the integrated luminosity $L_{int}$ (which for the sake of this rapport is $10fb^{-1}$) and the efficiency $\epsilon$. The efficiency in this case is equal to the fraction of signal before and after the different region requirements were applied. 
+\\
+We can define 
+\begin{align}\label{eq:sb}
+    s+b = L_{int} (\epsilon \sigma + \sigma_{bkg}).
+\end{align}
+Using equation \ref{eq:bays}, \ref{eq:Pns}, \ref{eq:sb} and marginalizing we can find a new expression for our original probability as
+\begin{align}
+    P(\sigma | n_{obs}) =N \int L\left(\sigma, L_{\text {int }}, \varepsilon, \sigma_{\mathrm{bkg}}\right) p\left(L_{\mathrm{int}}\right) p\left(\varepsilon\right) p\left(\sigma_{\mathrm{bkg}}\right) d L_{\mathrm{int}} d \varepsilon_{\mathrm{sig}} d \sigma_{\mathrm{bkg}},
+\end{align}
+where N is a normalization constant and the probability is now depndant on the signal cross section. To calculate expressions as the ones above and to find $s_{up}$ Monte carlo integration must be used. In this rapport I used the statistical framework created by Magnar Kopangen Bugge in the statisticsNotebook to calculate all limits.
 \section{Implementation}
 The cuts in the analysis are all chosen by me, although some are inspired by the work of Eirik Gramstad in his thesis from 2013 \cite{Gramstad:2013loc}.
 \subsection{Cuts and signal regions}
@@ -498,7 +547,7 @@ Additional to the imbalanced data-set, there was a problem with the weights prod
 How one chooses to deal with this problem can heavily effect results and many solution are suggested as a consequence. Given the time limitations of this rapport, the simplest solution was chosen. Namely, I chose to normalize all the weights as a whole, conserving the total sum of the weights and at the same time changing all negative signs. The simple procedure is shown bellow in equation \ref{eq:negw},
 \begin{align}\label{eq:negw}
     w_i & = P \mid w_i \mid\,  \\
-    P  & =  \sum_j^{N-1}\frac{ w_j}{\mid w_j \mid},
+    P  & =  \sum_{j=0}^{N-1}\frac{ w_j}{\mid w_j \mid},
 \end{align}
 where $w_i$ is the weight of an event i, $i \in [0,N-1]$ and N equals the total number of events.
 \subsection{The XGBoost-classifier}
@@ -506,12 +555,11 @@ For the case of this rapport, no gridsearch was used in finding hyper-parameters
 \\
 Some of the parameters were changed to either make the classifier faster, or based on previous experience i similar analysis. Firstly the learning rate was changed to $0.1$. Secondly the the $max\_depth$ of the classifier was changed to 3. Finally the weights of the classifier was set to the sum of the weights of signal divided by the sum of the weights of background. This was done as a suggestion by the XGBoost-contributors. Given the scaling of the weights this factor will be 1. 
 \section{Results and discussion}
+\subsection{Monte Carlo and Data}\label{subsec:MCandData}
 Given the main ideas of the search is to compare MC to real data, one must first make sure that the MC-data in-fact resembles the real data. To do so I have plotted the distribution of 9 variables. In addition I plot the ratio of real data divided by MC for each bin. For practical purposes the contribution of SUSY signal is included in the distribution plot, but given the small amount of signal it will not effect the comparison. However the SUSY signal is not included in the ratio plot.
 \\
 In figure \ref{fig:var1} I have plotted the transverse momentum for the first \ref{fig:Cuts_pt1} and second lepton \ref{fig:Cuts_pt2}, missing transverse energy \ref{fig:Cuts_met}, dilepton mass \ref{fig:Cuts_mll} and the stransverse momentum \ref{fig:Cuts_T2}. In all the aforementioned figures we observe a clear similarity between the MC and real data. This is especially evident by studying the ratio-plots under each plot. Most of the ratios are located around, more so even for the bins with the highest number of events. From the ratio plots we also observe that the largest difference between MC and data happens for events with larger energy's/momentum.  
 \\
-In figure \ref{fig:var2} we plot the distribution of the nr of B-jets \ref{fig:Cuts_bTag}, the number of jets with transverse momentum larger than 20GeV \ref{fig:Cuts_jet20}
-and 60GeV \ref{fig:Cuts_jet60} and the number of events with same or opposite sign \ref{fig:Cuts_isOS}. From all the plots in figure \ref{fig:var2}, we observe the same as for figure \ref{fig:var1}. In other words we observe a clear similarity between the MC and real data. From our study of the distribution of different variables we can conclude that the MC adequately resembles the real data.
 \begin{figure}
     \makebox[\linewidth][c]{%
      \centering
@@ -542,14 +590,22 @@ and 60GeV \ref{fig:Cuts_jet60} and the number of events with same or opposite si
      \end{subfigure}
     }
     \centering
-    \begin{subfigure}[b]{.65\textwidth}
+    \makebox[\linewidth][c]{%
+    \begin{subfigure}[b]{.6\textwidth}
          \includegraphics[width=\textwidth]{Figures/Cuts/mT2.pdf}
          \caption{}
          \label{fig:Cuts_T2}
     \end{subfigure}
-    \hfill
-    \caption{The distribution of transverse momentum of first \ref{fig:Cuts_pt1} and second \ref{fig:Cuts_pt2} lepton, missing transverse energy \ref{fig:Cuts_met}, dilepton mass \ref{fig:Cuts_mll} and the stransverse mass \ref{fig:Cuts_T2} for the MC and real data.
-    \label{fig:var1}}
+    \begin{subfigure}[t]{0.6\textwidth}
+                \vspace{-180 pt} 
+                \captionsetup{width=.9\linewidth}
+                \caption*{Figure 8: The distribution of transverse momentum of first \ref{fig:Cuts_pt1} and second \ref{fig:Cuts_pt2} lepton, missing transverse energy \ref{fig:Cuts_met}, dilepton mass \ref{fig:Cuts_mll} and the stransverse mass \ref{fig:Cuts_T2} for the MC and real data. Additionally the ratio of data over MC is plotted under each distribution histogram.
+                }
+    \end{subfigure}
+     }
+     \captionsetup{labelformat=empty}
+    \caption{}
+    \label{fig:var1}
 \end{figure}
 
 \begin{figure}
@@ -557,13 +613,13 @@ and 60GeV \ref{fig:Cuts_jet60} and the number of events with same or opposite si
      \centering
      \begin{subfigure}[b]{.6\textwidth}
          \includegraphics[width=\textwidth]{Figures/Cuts/bTag.pdf} 
-         \caption{Nr B-Jets}
+         \caption{}
          \label{fig:Cuts_bTag}
      \end{subfigure}
      \centering
      \begin{subfigure}[b]{.6\textwidth}
          \includegraphics[width=\textwidth]{Figures/Cuts/njet20.pdf} 
-         \caption{Jets with a transverse momentum above 20[GeV]}
+         \caption{}
          \label{fig:Cuts_jet20}
      \end{subfigure}
     }
@@ -571,19 +627,21 @@ and 60GeV \ref{fig:Cuts_jet60} and the number of events with same or opposite si
      \centering
      \begin{subfigure}[b]{.6\textwidth}
          \includegraphics[width=\textwidth]{Figures/Cuts/njet60.pdf} 
-         \caption{Jets with a transverse momentum above 60[GeV]}
+         \caption{}
          \label{fig:Cuts_jet60}
      \end{subfigure}
      \centering
      \begin{subfigure}[b]{.6\textwidth}
          \includegraphics[width=\textwidth]{Figures/Cuts/isOS.pdf} 
-         \caption{Is lepton pair opposite charge}
+         \caption{}
          \label{fig:Cuts_isOS}
      \end{subfigure}
     }
-    \caption{}
+    \caption{The distribution of nr of B-jets \ref{fig:Cuts_bTag}, jets with a transverse momentum above 20[GeV] \ref{fig:Cuts_jet20}  and 60[GeV] \ref{fig:Cuts_jet60} and the number of lepton pairs with opposite or equal charge \ref{fig:Cuts_isOS} for the MC and real data. Additionally the ratio of data over MC is plotted under each distribution histogram.}
     \label{fig:var2}
 \end{figure}
+In figure \ref{fig:var2} we plot the distribution of the nr of B-jets \ref{fig:Cuts_bTag}, the number of jets with transverse momentum larger than 20GeV \ref{fig:Cuts_jet20}
+and 60GeV \ref{fig:Cuts_jet60} and the number of events with same or opposite sign \ref{fig:Cuts_isOS}. From all the plots in figure \ref{fig:var2}, we observe the same as for figure \ref{fig:var1}. In other words we observe a clear similarity between the MC and real data. From our study of the distribution of different variables we can conclude that the MC adequately resembles the real data.
 \subsection{Cuts for AR}
 In this section I will present the cuts made to define the AR as well as the result from applying them to the full data set. By studying the distribution plots in figure \ref{fig:var1} and \ref{fig:var1}, I aimed to remove as much of the background by making cuts before any of the peaks for the SUSY signal. By doing so I defined the region as presented by the cuts in table \ref{table:AR}. Note that the cut applied on the missing transverse energy is the only case were a upper-limit is defined. This was done as an attempt to remove regions were the MC and real data differ in a unsystematic way.
 \bgroup
@@ -605,7 +663,7 @@ In this section I will present the cuts made to define the AR as well as the res
     \cmidrule(l r ){1-3}
     $m_{ll}$ & & $>120[GeV]$  \\
     \cmidrule(l r ){1-3}
-    $m_{T2}$  & & $>175[GeV]$ \\
+    $m_{T2}$  & & $>150[GeV]$ \\
     \cmidrule(l r ){1-3}
     $Nr\ B-Jet$ & & $<2$  \\ 
     \cmidrule(l r ){1-3}
@@ -653,7 +711,7 @@ By applying the cuts for the AR a great amount of the data was removed. The resu
 \end{table}
 }
 \egroup
-\subsection{Training and validation}
+\subsection{Training and validation}\label{subsec:training}
 As mentioned in section \ref{sec:DH}, all training, validation and testing was done in in the AR. Firstly I preformed a fit of the classifier on the training set, containing $80\%$ of the signal and background. After training I plotted the distribution as well as the ROC-curve of the output from the classifier from the training data. The results are shown in figure \ref{fig:XGB_dist_training} and \ref{fig:XGB_dist_validation} . Figure \ref{fig:XGB_dist_training} shows a clear separation between the background and signal. This is evident from the ROC-curve which creates an area of 0.985. 
 \begin{figure}
     \makebox[\linewidth][c]{%
@@ -674,7 +732,9 @@ As mentioned in section \ref{sec:DH}, all training, validation and testing was d
 \end{figure}
 \newline
 After training and analysing the reuslts on the training data, I create similar plots for the validation data. The distribution and ROC-curve is displayed in figures \ref{fig:XGB_dist_validation}
-and \ref{fig:XGB_ROC_validation}. In figure \ref{fig:XGB_dist_validation} we see a clear separation between the signal and background, although not as prominent as in the training data. From figure \ref{fig:XGB_ROC_validation} we see that the classifier achieves an excellent ROC-curve area of 0.963. It is clear from the validation data that the XGBoost has picked up differences in trend for the signal and background and will be an can be used as a tool in the hope to create a effective signal region. 
+and \ref{fig:XGB_ROC_validation}. In figure \ref{fig:XGB_dist_validation} we see a clear separation between the signal and background, although not as prominent as in the training data. From figure \ref{fig:XGB_ROC_validation} we see that the classifier achieves an excellent ROC-curve area of 0.963. The optimal threshold should be placed in the area where the ratio of true positive divided by false positive is highest. From figure \ref{fig:XGB_ROC_validation} we can observe that this is in the region of [0.85, 0.95].
+\\
+It is clear from the validation data that the XGBoost has picked up differences in trend for the signal and background and will be an can be used as a tool in the hope to create a effective signal region. 
 \newline
 \begin{figure}
     \makebox[\linewidth][c]{%
@@ -701,11 +761,37 @@ Finally we plot the distribution of all the background data in figure \ref{fig:X
     \label{fig:XGB_dist_background}
 \end{figure}
 \subsection{Cuts for SR1}
+After training our XGBoost-classifier on the MC we can apply it on the real data and compare. In figure \ref{fig:XGB_SR1} I have plotted the distribution of the XGBoost output for both the MC background and the real data. Under the figure we see the ratio-plot between the two in each bin. From the distribution and ratio plot we see a clear similarity between the output for the MC and real data. Given the goal of comparing the two in different region, it is vital that the XGboost treats both similarly.
+\\
+In the distribution plot in figure \ref{fig:XGB_SR1} we also observe that most of the data is centered around the lower values of the output. Comparing to the distribution plot of the MC-signal in figure \ref{fig:XGB_SUSY}, we can see that the XGBoost classier has accurately separated most of the background from the signal. Note also that the MC-background in these plots are from the AR, meaning the background data in the plots are the events most similar to the signal, making the results of the XGBoost that much more impressive. 
+\\
+Finally in figure \ref{fig:XGB_SR1}, I plotted a dotted line representing the cut of the ML-output, defining the SR1. After some testing I found that the optimal threshold was for output values around 0.875, which inline with our observations made from the ROC-curve in section \ref{subsec:training}. This means that SR1 is defined as the data satisfying the AR requirements (see table \ref{table:AR}), as well as having a XGBoost output above 0.875. Using these requirements for SR1, we get the results as displayed in table \ref{table:SR1_R}.
+\\
+\begin{figure}
+    \makebox[\linewidth][c]{%
+     \centering
+     \begin{subfigure}[b]{.6\textwidth}
+         \includegraphics[width=\textwidth]{Figures/Results/XGB_dist.pdf}
+         \caption{}
+         \label{fig:XGB_SR1}
+     \end{subfigure}
+     \centering
+     \begin{subfigure}[b]{.65\textwidth}
+         \includegraphics[width=\textwidth]{Figures/Results/XGB_SUSY.pdf}
+         \caption{}
+         \label{fig:XGB_SUSY}
+     \end{subfigure}
+    }
+    \caption{XGBoost output distribution for MC and data \ref{fig:XGB_SR1} and the SUSYSlepSlep-MC \ref{fig:XGB_SUSY} in SR1.}
+\end{figure}
 \begin{figure}
 \bgroup
+In table \ref{table:SR1_R}, we observe that all background MC was reduced down to bellow 500 events, whereas the MC-signal still contains almost 2000 events. By comparison to the cuts made for the AR, the XGboost-classifer was able to cut far more efficiently, again keeping in mind that the data it was given is the background most similar to the signal. Although SR1 only cut $21\%$ of the signal, it still cut mor than $75\%$ of all the background, even reducing channels like ttbar and W+jets by $96\%$ and $99\%$.
+\\
+As was briefly mentioned in section \ref{subsec:WZjets}, the W/Z+jets-channels are normally negligible in searches such as these.  In articles like the ones from ATLAS in 2020 \cite{Aad_2020} or the work by Eirik Gramstad in 2013 \cite{Gramstad:2013loc}, cuts are normally made on different variables for the jets to reduce W/Z+jets-channels, or even ttbar. This would make the diboson-channel the largest irreducible background. In the data set used for this analysis, there was not enough features for the jets to reduce W/Z+jets- or ttbar-channels to a similar degree. Therefore ttbar and Z+jets effect the signal region more than usual. On the other hand the classifier was able to reduce the W+jets-channel to an almost negligible amount, 40. 
 \title{TBD}
 {\tabcolsep=20pt
-\begin{table}[H]
+\begin{table}
     \caption{Events analsysis of MC-data in total and in SR1}
     \centering 
     \begin{threeparttable}
@@ -731,53 +817,106 @@ Finally we plot the distribution of all the background data in figure \ref{fig:X
     \end{tabular}
     }
     \end{threeparttable}
-    \label{table:AMS}
+    \label{table:SR1_R}
 \end{table}
 }
 \egroup
 \end{figure}
 \subsection{Cuts for SR2}
-\begin{figure}
+Producing any result using the rectangle cut only approach, required a much stricter strategy than was the case for AR. The cuts made in this section were characterized by the attempt to reduce the amount of background in AR and thereby subsequently reducing any relative difference between the MC and real data. The resulting cuts for SR1 are displayed in table \ref{table:AR}, which are made in addition to the AR cuts. \\
 \bgroup
 \title{TBD}
 {\tabcolsep=20pt
-\begin{table}[H]
+\begin{table}
+    \caption{Feature cuts in SR2}
+    \label{table:AR}
+    \centering 
+    \begin{threeparttable}
+    \begin{tabular}{ccc}
+    \textbf{Features} & & \textbf{Thresholds}\\
+     \midrule\midrule
+    $\bar{E}_t$   & &  $ > 75, \ < 150[GeV]$  \\%new row
+    \cmidrule(l  r ){1-3}
+     $P_t \ (1)$ & &  $< 200[GeV]$  \\ 
+    \cmidrule(l r ){1-3}
+     $P_t \ (2)$ & & $> 60[GeV]$  \\ 
+    \cmidrule(l r ){1-3}
+    $m_{ll}$ & & $< 300[GeV]$  \\
+    \cmidrule(l r ){1-3}
+    $Nr\ B-Jet\  (P_t>20GeV$) & & $< 2$  \\ 
+    \midrule\midrule
+    \end{tabular}
+    \end{threeparttable}
+\end{table}
+}
+\egroup
+As discussed in the analysis of feature distribution \ref{subsec:MCandData}, there seemed to be the most unsystematic deviation between MC and data in the areas with highest energies. This explains that most of the cuts added to the region are upper limits. Although this upper-limits reduce the possibility of fluctuation differences in the data, one also risk removing a large amount of the higher mass sleptons and neutralinos. 
+\\
+The results from defining the new region SR2 are presented in table \ref{table:SR2_R}. The table shows a larger reduction on all channels but the W+jets, compared to the SR1 region. All channels are reduced by more than $90\%$. The cost of the reduction of the background, is the reduction of the signal which is now more than $80\%$.
+\bgroup
+\title{TBD}
+{\tabcolsep=20pt
+\begin{table}
     \caption{Events analsysis of MC-data in total and in SR2}
+    \label{table:SR2_R}
     \centering 
     \begin{threeparttable}
     \makebox[\linewidth][c]{%
     \begin{tabular}{c c c c}
-    \textbf{Channel} & \textbf{Nr Event AR} & \textbf{Nr Events SR1} & \textbf{Reduction [\%]}\\
+    \textbf{Channel} & \textbf{Nr Event AR} & \textbf{Nr Events SR2} & \textbf{Reduction [\%]}\\
      \midrule\midrule
-    $Diboson$   & $1.5\times 10^{3}$ & $6\times 10^{1}$ &  $78\%$  \\%new row
+    $Diboson$   & $1.5\times 10^{3}$ & $1.4\times 10^{2}$ &  $90\%$  \\%new row
     \cmidrule(l  r ){1-4}
-     $ttbar$ & $1.1\times 10^{4}$ & $4.5\times 10^{1}$ & $96\%$  \\ 
+     $ttbar$ & $1.1\times 10^{4}$ & $5.8\times 10^{2}$ & $94\%$  \\ 
     \cmidrule(l r ){1-4}
-    $Z+jets$ & $1.9\times 10^{3}$ & $5.2\times 10^{2}$ & $83\%$   \\ 
+    $Z+jets$ & $1.9\times 10^{3}$ & $1.0\times 10^{2}$ & $94\%$   \\ 
     \cmidrule(l r ){1-4}
     
-    $W+jets$ & $2.7\times 10^{3}$ & $4.0\times 10^{1}$ & $99\%$  \\ 
+    $W+jets$ & $2.7\times 10^{3}$ & $1.2\times 10^{2}$ & $95\%$  \\ 
     \cmidrule(l r ){1-4}
 
-    $Others$  & $6.2\times 10^{1}$ & $1.0\times 10^{1}$ & $84\%$ \\
+    $Others$  & $6.2\times 10^{1}$ & $5.0\times 10^{0}$ & $92\%$ \\
     \cmidrule(l r ){1-4}
 
-    $SUSYSlepSlep$  &  $2.3\times 10^{3}$ & $1.8\times 10^{3}$ & $21\%$ \\
+    $SUSYSlepSlep$  &  $2.3\times 10^{3}$ & $4.2\times 10^{2}$ & $81\%$ \\
     \midrule\midrule
     \end{tabular}
     }
     \end{threeparttable}
-    \label{table:AMS}
 \end{table}
 }
 \egroup
-\end{figure}
-\subsection{Results in SR1 and SR2}
+\subsection{Discovery or exclusion}
+In table \ref{table:SR1_SR2} I have written the resulting MC-background and data in both SR1 and SR2, along with the resulting significance. The Significance was calculated using equation \ref{eq:Z}. From the table we see that both SR1 and SR2 cut a relatively similar amount of events for both MC and data. SR1 achieved a significance of 0.25 whereas SR2 achieved a significance of 1.20, which are both far from 5. Neither of the regions found a deviation between the MC and data worth any further search as far as discovery is concerned.
+\\
+\bgroup
+\title{TBD}
+{\tabcolsep=20pt
+\begin{table}
+    \caption{Final result of MC and data in SR1 an SR2}
+    \label{table:SR1_SR2}
+    \centering 
+    \begin{threeparttable}
+    \begin{tabular}{cccc}
+    \textbf{Region} & \textbf{MC} & \textbf{Data} & \textbf{Significance (Z)}\\
+    \midrule\midrule
+    $SR1$   & $1266$ &  $1284$ & 0.25 \\%new row
+    \cmidrule(l  r ){1-4}
+    $SR2$ & $1097$ &  1174 & 1.20 \\ 
+    \midrule\midrule
+    \end{tabular}
+    \end{threeparttable}
+\end{table}
+}
+\egroup
+Given the lack of discovery I aim to exclude certain masses for the SUSY model. I do this by studying each pair of different masses for the slepton and the neutralino, discussed in \ref{sec:SUSY}. Before I can calculate the limits and check for exclusion, I need to calculate the efficiency of each pair. 
+\\
+In table \ref{table:eff} I displayed the number of signal events in each region for each mass pair, along with the resulting efficiency. Already we see that SR1 has cut far less signal than SR2. In addition we observe that most of events left are in the smaller mass range. 
 \bgroup
 \centering
 \title{TBD}
 {\tabcolsep=20pt
-\begin{table}[H]
+\begin{table}
     \centering
     \caption{Exclusion of slepton and neutralino massses.}
     \centering 
@@ -786,70 +925,56 @@ Finally we plot the distribution of all the background data in figure \ref{fig:X
     \begin{tabular}{ccc}
     \textbf{Masses[GeV]} &  \textbf{Events in SR1 [efficiency]} & \textbf{Events in SR2 [efficiency]}  \\
      \midrule\midrule
-    $m_{\tilde{l}} = 100$, $m_{\tilde{\chi}} = 50$   & 736  & $Y$   \\%new row
+    $m_{\tilde{l}} = 100$, $m_{\tilde{\chi}} = 50$   & 461 [0.173]  & 105 [0.028]   \\%new row
     \cmidrule(l  r ){1-3}
-     $m_{\tilde{l}} = 100.5$, $m_{\tilde{\chi}}  = 1$ & 1309 &  $Y$  \\ 
+     $m_{\tilde{l}} = 100.5$, $m_{\tilde{\chi}}  = 1$ & 913 [0.280] &  239 [0.057]  \\ 
     \cmidrule(l r ){1-3}
-    $m_{\tilde{l}} = 200$, $m_{\tilde{\chi}}  = 100$ & 199 & $Y$  \\ 
+    $m_{\tilde{l}} = 200$, $m_{\tilde{\chi}}  = 100$ & 144 [0.461] & 37 [0.100]  \\ 
     \cmidrule(l r ){1-3}
 
-    $m_{\tilde{l}} = 200.5$, $m_{\tilde{\chi}} = 1$  & 278 & $Y$   \\% end of rows
+    $m_{\tilde{l}} = 200.5$, $m_{\tilde{\chi}} = 1$  & 203 [0.571] & 30 [0.075]   \\% end of rows
     \cmidrule(l r ){1-3}
     
-    $m_{\tilde{l}} = 300$, $m_{\tilde{\chi}}  = 200$  & 43 &   $N$ \\
+    $m_{\tilde{l}} = 300$, $m_{\tilde{\chi}}  = 200$  & 30 [0.484] &   7 [0.102] \\
     \cmidrule(l r ){1-3}
     
-    $m_{\tilde{l}} = 300.5$, $m_{\tilde{\chi}}  = 1$  & 64  &   $N$ \\
+    $m_{\tilde{l}} = 300.5$, $m_{\tilde{\chi}}  = 1$  & 37 [0.529]  &   2 [0.032] \\
     \cmidrule(l r ){1-3}
     
-    $m_{\tilde{l}} = 400$, $m_{\tilde{\chi}}  = 300$  & 12  &   $N$ \\
+    $m_{\tilde{l}} = 400$, $m_{\tilde{\chi}}  = 300$  & 8 [0.484]  &   2 [0.093] \\
     \cmidrule(l r ){1-3}
     
-    $m_{\tilde{l}} = 500$, $m_{\tilde{\chi}}  = 100$  & 6 &   $N$ \\
+    $m_{\tilde{l}} = 500$, $m_{\tilde{\chi}}  = 100$  & 3 [0.523] &   0 [0.000] \\
     \cmidrule(l r ){1-3}
     
-    $m_{\tilde{l}} = 500$, $m_{\tilde{\chi}}  = 100$  &  7 &   $N$ \\
+    $m_{\tilde{l}} = 500$, $m_{\tilde{\chi}}  = 100$  &  2 [0.475] &   0 [0.000] \\
     \cmidrule(l r ){1-3}
     
-    $m_{\tilde{l}} = 500.5$, $m_{\tilde{\chi}}  = 1$  & 7  &   $N$ \\
+    $m_{\tilde{l}} = 500.5$, $m_{\tilde{\chi}}  = 1$  & 2 [0.491]  &   0 [0.000] \\
     \cmidrule(l r ){1-3}
     
-    $m_{\tilde{l}} = 600$, $m_{\tilde{\chi}}  = 1$  & 3  &   $N$ \\
+    $m_{\tilde{l}} = 600$, $m_{\tilde{\chi}}  = 1$  &  1 [0.322]  &   0 [0.000] \\
     \cmidrule(l r ){1-3}
     
-    $m_{\tilde{l}} = 600$, $m_{\tilde{\chi}}  = 300$  & 3 &   $N$ \\
+    $m_{\tilde{l}} = 600$, $m_{\tilde{\chi}}  = 300$  & 1 [0.309] &   0 [0.000] \\
     \cmidrule(l r ){1-3}
     
-    $m_{\tilde{l}} =  700$, $m_{\tilde{\chi}}  = 300$  & 1  &   $N$ \\
+    $m_{\tilde{l}} =  700$, $m_{\tilde{\chi}}  = 300$  & 0 [0.00]  &   0 [0.000] \\
     \cmidrule(l r ){1-3}
     
-    $m_{\tilde{l}} =  700.5$, $m_{\tilde{\chi}}  = 1$  &  1
-    &   $N$ \\
+    $m_{\tilde{l}} =  700.5$, $m_{\tilde{\chi}}  = 1$  &  0 [0.00]
+    &   0 [0.000] \\
     \midrule\midrule
     \end{tabular}
     }
     \end{threeparttable}
-    \label{table:AMS}
+    \label{table:eff}
 \end{table}
 }
 \egroup
-\begin{figure}
-    \makebox[\linewidth][c]{%
-     \centering
-     \begin{subfigure}[b]{.6\textwidth}
-         \includegraphics[width=\textwidth]{Figures/Results/XGB_dist.pdf}
-         \caption{}
-         \label{fig:XGB_SR1}
-     \end{subfigure}
-     \centering
-     \begin{subfigure}[b]{.65\textwidth}
-         \includegraphics[width=\textwidth]{Figures/Results/XGB_SUSY.pdf}
-         \caption{}
-         \label{fig:XGB_SUSY}
-     \end{subfigure}
-    }
-    \caption{XGBoost output distribution for MC and data \ref{fig:XGB_SR1} and the SUSYSlepSlep-MC \ref{fig:XGB_SUSY} in SR1.}
-\end{figure}
+Using the number of events and efficiency I calculated the limits for each off the mass pair. To visualize the reult I created two plots for each of the regions. The plots visualize the limits for each pair both for a $95\%$ and $87\%$ confidence. Any mass pair with a cross section above any of the aforementioned lines, is excluded up to that confidence. 
+\\
+In figure \ref{fig:ExlusionSR1} I plotted the result for SR1. From the figure we observe that one of the mass pairs are excluded up to $95\%$ confidence, namely the pair with a slepton mass of $100.5$GeV and $1$GeV nautralino mass. The rest of the mass pairs were not excluded up to this confidence, although one was almost excluded up to $87\%$ confidence (200.5Gev and 1GeV).
 \begin{figure}
     \makebox[\linewidth][c]{%
      \centering
@@ -858,15 +983,15 @@ Finally we plot the distribution of all the background data in figure \ref{fig:X
      \end{subfigure}
      }
      \caption{Visualization of crossection of each mass-pair in SR2 with each corresponding exclusion limit up to $95\%$ and $87\%$.}
-     \label{fig:ExlusionSR2}
+     \label{fig:ExlusionSR1}
 \end{figure}
 \begin{figure}
     \makebox[\linewidth][c]{%
      \centering
      \begin{subfigure}[b]{\textwidth}
-         \includegraphics[width=\textwidth]{Figures/Results/ExlusionEvents_nML.pdf}
+         \includegraphics[width=\textwidth]{Figures/StatAnal/ExlusionEvents_nML.pdf}
          \caption{Visualization of crossection of each mass-pair in SR3 with each corresponding exclusion limit up to $95\%$ and $87\%$.}
-         \label{fig:ExlusionSR3}
+         \label{fig:ExlusionSR2}
      \end{subfigure}
     }
 \end{figure}
@@ -878,6 +1003,7 @@ Finally we plot the distribution of all the background data in figure \ref{fig:X
     \item Individual SR for each mass. Some masses prefer a stricter threshold on ML
     \item New way of handling negative weights. Cell resampling (https://arxiv.org/pdf/2109.07851.pdf)
     \item More data on Jets, possibly exclude more Z+Jets and W+Jets before ML-Cut
+    \item accurate uncertainty 
 \end{itemize}
 
 \section{Conclusion}
