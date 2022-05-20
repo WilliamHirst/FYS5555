@@ -599,7 +599,7 @@ For the case of this rapport, no gridsearch was used in finding hyper-parameters
 Some of the parameters were changed to either make the classifier faster, or based on previous experience i similar analysis. Firstly the learning rate was changed to $0.1$. Secondly the $max\_depth$ of the classifier was changed to 3. Finally the weights of the classifier was set to the sum of the weights of signal divided by the sum of the weights of background. This was done as a suggestion by the XGBoost-contributors. Given the scaling of the weights this factor will be 1. 
 \section{Results and discussion}
 \subsection{Monte Carlo and Data}\label{subsec:MCandData}
-Given the main idea of the search is to compare MC to real data, one must first make sure that the MC in-fact resembles the real data. To do so I have plotted the distribution of 9 variables. In addition I plot the ratio of real data divided by MC for each bin. For practical purposes the contribution of SUSY signal is included in the distribution plot, but given the small amount of signal it will not effect the comparison. However the SUSY signal is not included in the ratio plot.
+Given the main idea of the search is to compare MC to real data, one must first make sure that the MC in-fact resembles the real data. To do so I have plotted the distribution of 9 variables. In addition I plot the ratio of real data divided by MC for each bin. For the purpose of justifying the cuts made for AR and SR1 the contribution of SUSY signal is included in the distribution plot, but given the small amount of signal it will not effect the comparison. However the SUSY signal is not included in the ratio plot.
 \\
 In figure \ref{fig:var1} I have plotted the transverse momentum for the first \ref{fig:Cuts_pt1} and second lepton \ref{fig:Cuts_pt2}, missing transverse energy \ref{fig:Cuts_met}, dilepton mass \ref{fig:Cuts_mll} and the stransverse momentum \ref{fig:Cuts_T2}. In all the aforementioned figures we observe a clear similarity between the MC and real data. This is especially evident by studying the ratio-plots under each plot. Most of the ratios are located around 1, more so even for the bins with the highest number of events. From the ratio plots we also observe that the largest difference between MC and data happens for events with larger energy's/momentum.  
 \\
@@ -652,7 +652,6 @@ and 60GeV \ref{fig:Cuts_jet60} and the number of events with same or opposite si
     \caption{}
     \label{fig:var1}
 \end{figure}
-
 \begin{figure}
     \makebox[\linewidth][c]{%
      \centering
@@ -688,7 +687,7 @@ and 60GeV \ref{fig:Cuts_jet60} and the number of events with same or opposite si
 \newpage
 \subsection{Cuts for AR}
 In this section I will present the cuts made to define the AR as well as the result from applying them to the full data set. By studying the distribution plots in figure \ref{fig:var1} and \ref{fig:var2}, I aimed to remove as much of the background by making cuts before any of the peaks for the SUSY signal. By doing so I defined the region as presented by the cuts in table \ref{table:AR}. Note that the cut applied on the missing transverse energy is the only case were a upper-limit is defined. This was done as an attempt to remove regions were the MC and real data differ in a unsystematic way. \\
-By applying the cuts for the AR a great amount of the data was removed. The resulting reduction on each channel is presented in table \ref{table:AR_result}. From the table we can see that Z+jets and W+jets was effected the most, removing more than $99.99\%$ from both channels. Dibson and ttbar were reduced $96\%$ and $94\%$ respectively. As expected this channels are harder to remove given their similiarity to the signal. The 'others'-channels was like the Z/W+jets channel almost completely removed. The SUSY-signal was however only reduced by $74\%$ making it the second largest channel in the AR, only beaten by the W+jets channel.
+By applying the cuts for the AR a great amount of the data was removed. The resulting reduction on each channel is presented in table \ref{table:AR_result}. From the table we can see that Z+jets and W+jets was effected the most, removing more than $99.99\%$ from both channels. Dibson and ttbar were reduced $96\%$ and $94\%$ respectively. As expected these channels are harder to remove given their similarity to the signal. The 'others'-channel was like the Z/W+jets channel almost completely removed. The SUSY-signal was however only reduced by $74\%$ making it the second largest channel in the AR, only beaten by the W+jets channel.
 \bgroup
 \title{TBD}
 {\tabcolsep=20pt
@@ -756,7 +755,7 @@ By applying the cuts for the AR a great amount of the data was removed. The resu
 \egroup
 \newpage
 \subsection{Training and validation}\label{subsec:training}
-As mentioned in section \ref{sec:DH}, all training, validation and testing was done in in the AR. Firstly I preformed a fit of the classifier on the training set, containing $80\%$ of the signal and background. After training I plotted the distribution as well as the ROC-curve of the output from the classifier from the training data. The results are shown in figure \ref{fig:XGB_dist_training} and \ref{fig:XGB_dist_validation}. Figure \ref{fig:XGB_dist_training} shows a clear separation between the background and signal.  This is evident from the ROC-curve which creates an area of 0.985. The distribution plot shows that most of the background is located in the lowest output-bin. This again confirms the classifiers ability to accurately classify background and signal.  
+As mentioned in section \ref{sec:DH}, all training, validation and testing was done in in the AR. Firstly I preformed a fit of the classifier on the training set, containing $80\%$ of the signal and background. After training I plotted the distribution as well as the ROC-curve of the output from the classifier from the training data. The results are shown in figure \ref{fig:XGB_dist_training} and \ref{fig:XGB_ROC_training}. Figure \ref{fig:XGB_dist_training} shows a clear separation between the background and signal.  This is evident from the ROC-curve which creates an area of 0.985. The distribution plot shows that most of the background is located in the lowest output-bin. This again confirms the classifiers ability to accurately classify background and signal.  
 \begin{figure}
     \makebox[0.9\linewidth][c]{%
      \centering
@@ -829,7 +828,7 @@ Finally in figure \ref{fig:XGB_SR1}, I plotted a dotted line representing the cu
 \bgroup
 In table \ref{table:SR1_R}, we observe that all background MC was reduced down to bellow 500 events, whereas the MC-signal still contains almost 2000 events, making the signal the largest channel in SR1. By comparison to the cuts made for the AR, the XGboost-classifier was able to cut far more efficiently, again keeping in mind that the data it was given is the background most similar to the signal. Although SR1 only cut $21\%$ of the signal, it still cut more than $75\%$ of all the background, even reducing channels like ttbar and W+jets by $96\%$ and $99\%$.
 \\
-As was briefly mentioned in section \ref{subsec:WZjets}, the W/Z+jets-channels are normally negligible in searches such as these.  In articles like the ones from ATLAS in 2020 \cite{Aad_2020} or the work by Eirik Gramstad in 2013 \cite{Gramstad:2013loc}, cuts are normally made on different variables for the jets to reduce W/Z+jets-channels, or even ttbar. This would make the diboson-channel the largest irreducible background. In the data set used for this analysis, there was not enough features for the jets to reduce W/Z+jets- or ttbar-channels to a similar degree. Therefore ttbar and Z+jets effect the signal region more than usual. On the other hand the classifier was able to reduce the W+jets-channel to an almost negligible amount, 40.
+As was briefly mentioned in section \ref{subsec:WZjets}, the W/Z+jets-channels are normally negligible in searches such as these.  In articles like the ones from ATLAS in 2020 \cite{Aad_2020} or the work by Eirik Gramstad in 2013 \cite{Gramstad:2013loc}, cuts are normally made on different variables for the jets to reduce W/Z+jets-channels, or even ttbar. This would make the diboson-channel the largest irreducible background. In the data set used for this analysis, there was not enough features for the jets to reduce W/Z+jets- or ttbar-channels to a similar degree. Therefore ttbar and Z+jets effect the signal region more than usual. On the other hand the classifier was able to reduce the W+jets-channel to an almost negligible amount, 40 events.
 \title{TBD}
 {\tabcolsep=20pt
 \begin{table}
@@ -864,13 +863,13 @@ As was briefly mentioned in section \ref{subsec:WZjets}, the W/Z+jets-channels a
 \egroup
 \end{figure}
 \subsection{Cuts for SR2}
-Producing any result using the rectangle cut only approach, required a much stricter strategy than was the case for AR. The cuts made in this section were characterized by the attempt to reduce the amount of background in AR and thereby subsequently reducing any relative difference between the MC and real data. The resulting cuts for SR1 are displayed in table \ref{table:AR}, which are made in addition to the AR cuts. \\
+Producing any result using the rectangle cut only approach, required a much stricter strategy than was the case for AR. The cuts made in this section were characterized by the attempt to reduce the amount of background in AR and thereby subsequently reducing any relative difference between the MC and real data. The resulting cuts for SR2 are displayed in table \ref{table:SR2_RES}, which are made in addition to the AR cuts. \\
 \bgroup
 \title{TBD}
 {\tabcolsep=20pt
 \begin{table}
     \caption{Feature cuts in SR2}
-    \label{table:AR}
+    \label{table:SR2_RES}
     \centering 
     \begin{threeparttable}
     \begin{tabular}{ccc}
