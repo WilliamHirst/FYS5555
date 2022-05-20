@@ -48,7 +48,7 @@
 
 \vspace{1cm}
 
-{\Large Searching for two direct sleptons in a proton-proton collison using supervised machine learning}
+{\Large Searching for two direct sleptons in a dilepton final states using supervised machine learning}
 
 \vspace{1.5cm}
 
@@ -62,8 +62,52 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth]{Figures/Illustrations/signal.png}
-    \label{fig:signal}
+    \begin{tikzpicture}
+    \begin{feynman}[scale=1.5,transform shape]
+        \vertex at (-1.75, 1.1) (i1) {\(P\)};
+        \vertex at (-1.5, 1.) (i2);
+        \vertex at (-1.525, 0.9) (i3) ;
+        \vertex at (0.18, 1.1)  (a1);
+        \vertex at (0.5, 1.) [blob] (a2) {\contour{white}};
+        \vertex at (0.18, 0.9) (a3);
+        
+        \vertex at (-1.75, -1.1) (i4) {\(P\)};
+        \vertex at (-1.5, -1.) (i5);
+        \vertex at (-1.525, -0.9) (i6) ;
+        \vertex at (0.18, -1.1)  (a4);
+        \vertex at (0.5, -1.) [blob] (a5) {\contour{white}};
+        \vertex at (0.18, -0.9) (a6);
+        
+        \vertex at (1.25, 0.0) (c);
+        \vertex at (3., 0.0) (d);
+        \vertex at (1,-0.5) (b);
+        
+        \vertex at (3.5, 1.) (f1) ;
+        \vertex at (3.5,-1.) (f2);
+        \vertex at (5.5, 1.5) (f3) {\(l^-\)};
+        \vertex at (5.5, 0.5) (f4) {\(\tilde{\chi}_1^0\)};
+        \vertex at (5.5, -0.5) (f5) {\(\tilde{\chi}_1^0\)};
+        \vertex at (5.5, -1.5) (f6) {\(l^+\)};
+        
+    \diagram*{
+        (i1) -- [lepton] (a1) ,
+        (i2) -- [fermion] (a2) [blob],
+        (i3) -- [lepton] (a3), 
+        (a2) -- [fermion] (c) -- [boson] (d),
+        (i4) -- [lepton] (a4) ,
+        (i5) -- [fermion] (a5) [blob],
+        (i6) -- [lepton] (a6), 
+        (a5) -- [anti fermion] (c) -- [boson, edge label = {$Z,\gamma$}] (d),
+        (d) -- [fermion, edge label =\(\tilde{l}^-\) ] (f1),
+        (d) -- [anti fermion, edge label =\(\tilde{l}^+\) ] (f2),
+        (f1) -- [fermion] (f3),
+        (f1) -- [ghost] (f4),
+        (f2) -- [anti fermion] (f6),
+        (f2) -- [ghost] (f5),
+        ;
+    };
+    \end{feynman}
+    \end{tikzpicture}
 \end{figure}
 
 \vfill
@@ -78,21 +122,21 @@
 \begin{center}
 \centering
 \textit{
-In this rapport I compare two different approaches in the search for direct sleptons in the ATLAS 13TeV $10fb^{-1}$ data. The first approach uses a rectangle cut only approach, the second uses a mixture of rectangle cuts and machine learning (XGBoost). I found no excess of events beyond the prediction of the standard model using the first or second approach. Using the rectangle approach no combinations of slepton and neutralino mass were excluded. Using the rectangle/machine learning approach I was able to exclude the slepton mass of 100.5GeV and neutralino mass of 1GeV up to a $95\%$ confidence, though with unprecice uncertainty. In the comparison I found that the rectangle only approach was not able to preserve enough signal to produce any conclusive results. By applying the XGBoost classifier to the analysis I was able to seperate signal from background creating a far more complex and accurate signal region. 
+In this rapport I compare two different approaches in the search for direct sleptons in the ATLAS 13TeV $10fb^{-1}$ data. The first approach uses a rectangle cut only approach, the second uses a mixture of rectangle cuts and machine learning (XGBoost). I found no excess of events beyond the prediction of the standard model using the first or second approach. Using the rectangle approach no combinations of slepton and neutralino masses were excluded. Using the rectangle/machine learning approach I was able to exclude the slepton mass of 100.5GeV and neutralino mass of 1GeV up to a $95\%$ confidence, though with imprecise uncertainty. In the comparison I found that although the rectangle only approach cut more than $90\%$ of all background, it was not able to preserve enough signal to produce any conclusive results. By applying the XGBoost classifier to the analysis I was able to seperate signal from background, therby creating a far more complex and accurate signal region. 
 }
 \end{center}
 \section{Introduction}
-The standard model (SM) is perhaps one of the most successful scientific theories ever created. It accurately explains the interactions of leptons and quarks as well as the force carrying particles which mediate said interactions. In 2012 the SM achieved one of its crowning achievements when we discovered the Higgs boson. Much of the accolade was rightfully given to the theoretical work on the SM, but, another aspect of the discovery was equally important. Data analysis was and is a crucial part of any new discovery in physics. One of the most important and exiting tools is machine learning.
+The standard model (SM) is perhaps one of the most successful scientific theories ever created. It accurately explains the interactions of leptons and quarks as well as the force carrying particles which mediate said interactions. In 2012 the SM achieved one of its crowning achievements when we discovered the Higgs boson. Much of the accolade was rightfully given to the theoretical work on the SM, but another aspect of the discovery was equally important. Data analysis was and is a crucial part of any new discovery in physics. One of the most important and exiting tools is machine learning.
 \\
 When on the search for beyond standard model (BSM)-physics, one aims to search in isolated regions where one suspects to find it. The traditional approach is to define regions by preforming rectangle cuts on event variables. In the case that the BSM is significantly different from the SM, this can be quite successfully. But, in the case that the two are relatively similar, rectangle cuts will not suffice. Machine learning aims to apply cuts that in practice are not (or at least do not seem) rectangle, but are curved. One often speaks about the machine learning creating a complex, curved region in the phase space spanned by the events.
 \\
-In this rapport I will use a mixed approach of rectangle cuts and machine learning and compare it to a strict rectangle cut approach in their ability to search for new physics in the ATLAS 13TeV $10fb^{-1}$ data \cite{ATL-OREACH-PUB-2020-001}. The new-physics which will be the focus of this rapport will be Super Symmetry\footnote{More on the motivation behind super symmetry in section \ref{sec:SUSY}}. The methods compared in this raport will be tested on their ability to provide new information about the real data, either it be discovery or exclusion.
+In this rapport I will use a mixed approach of rectangle cuts and machine learning and compare it to a strict rectangle cut approach in their ability to search for new physics in a dilepton final state using the ATLAS 13TeV $10fb^{-1}$ data \cite{ATL-OREACH-PUB-2020-001}. The new-physics which will be the focus of this rapport will be Super Symmetry\footnote{More on the motivation behind super symmetry in section \ref{sec:SUSY}}. The methods compared in this raport will be tested on their ability to provide new information about the real data, either it be discovery or exclusion.
 \\
-This rapport is structured in 4 sections; theory, implementation, results & discussion and conclusion. In the theory section I will discuss the basis strategy of the search, Super symmetry and why it is worth the search, the different background-channels which will contribute to the analysis, the machine learning algorithm of choice and the statistical framework used in analysing the results. In the implementation section I will further explain the different methods used in the analysis, how I have chosen to handle the data as well as the steps involved in applying the machine learning framework. The results and discussion section will present all cuts used in defining different regions, the results from training the classifier, the results from applying each region, the final results from each search and discuss possible ways forward. Finally all results and discussion, will be summarised in the conclusion section.
+This rapport is structured in 4 sections; theory, implementation, results $\&$ discussion and conclusion. In the theory section I will discuss the basis strategy of the search, Super symmetry and why it is worth the search, the different background-channels which will contribute to the analysis, the machine learning algorithm of choice and the statistical framework used in analysing the results. In the implementation section I will further explain the different methods used in the analysis, how I have chosen to handle the data as well as the steps involved in applying the machine learning framework. The results and discussion section will present all cuts used in defining different regions, the results from training the classifier, the results from applying each region, the final results from each search and discuss possible ways forward. Finally all results and discussion, will be summarised in the conclusion section.
 \section{Theory}
 In this section I will discuss the necessary theory for both the physical analysis (supersymmetry, statistical tools ect.) as well as the tools need for the ML analysis. Note that the sections on XGBoost-classifier and boosted decision trees  is inspired from my previous work in the articles \cite{FYSSTK} and \cite{HIGGS}.
 \subsection{Basic search strategy}
-In most attempts to search for BSM-physics the basic idea is to choose a new model of interest and compare Monte Carlo data (MC) with with real data in designated regions we call signal regions (SR). To define these SR we use MC. As will be made clearer in later section, we want to define these signal regions as a region in the feature space with the most amount of predicted MC of the BSM physics (signal) and the least amount of SM MC (background). Defining these regions can sometimes be done through classical rectangle cuts in certain features. This means manually finding thresholds for different variables and excluding all event either below or above this threshold. Using machine learning allows us to define more sophisticated cuts based on trends in the features space that might not visible to the human eye. 
+In most attempts to search for BSM-physics the basic idea is to choose a new model of interest and compare Monte Carlo data (MC) with with real data in designated regions we call signal regions (SR). To define these SR we use MC. As will be made clearer in later section, we want to define these signal regions as a region in the feature space with the most amount of predicted MC of the BSM physics (signal) and the least amount of SM MC (background). Defining these regions can sometimes be done through classical rectangle cuts on certain features. This means manually finding thresholds for different variables and excluding all event either below or above this threshold. Using machine learning allows us to define more sophisticated cuts based on trends in the features space that might not visible to the human eye. 
 \subsection{Super symmetry}\label{sec:SUSY}
 A supersymmetric theory has for many years been an interesting candidate for a new physics beyond the standard model. Supersymmetry (SUSY) aims to alter the standard model such that mass and force is treated equally. Supersymmetry suggests that each SM particle has an additional superpartner(SP) which we call a sparticle. The sparticles all differ with half a spin from the original SM particle. Because SUSY is a broken symmetry, sparticles are expected to be much higher than the corresponding SM masses, often in the range of 100-1000GeV. The difference in spin means that the SP of a fermion is a boson and the SP of a boson is a fermion. SUSY is a candidate to fix many problems in physics, some of which are; the hierarchy problem, fixing the mass of the higgs and possibly the mystery of dark matter.
 \\
@@ -207,7 +251,7 @@ In figure \ref{fig:WW} I have drawn a Feynman diagram of the WW channel. The fig
     \caption{The Feynman diagram for the background diboson channel $WW$.}
     \label{fig:WW}
 \end{figure}
-In figure \ref{fig:WZ} I have drawn a Feynman diagram of WZ. The figure shows an up quark annihilating coupled to a W-boson and a down quark, and a anti-down quark coupled to a the aforementioned down quark and a Z-boson. The W-boson decays into a charged and neutral lepton pair and the Z can decay into a pair quarks or leptons. 
+In figure \ref{fig:WZ} I have drawn a Feynman diagram of WZ. The figure shows an up quark  coupled to a W-boson and a down quark, and an anti-down quark coupled to the aforementioned down quark and a Z-boson. The W-boson decays into a charged and neutral lepton pair and the Z can decay into a pair of quarks or leptons. 
 \begin{figure}
     \centering
     \begin{tikzpicture}
@@ -258,7 +302,7 @@ In figure \ref{fig:WZ} I have drawn a Feynman diagram of WZ. The figure shows an
     \caption{Feynman diagram for the background diboson channel WZ.}
     \label{fig:WZ}
 \end{figure}
-In figure \ref{fig:ZZ} I have drawn the Feyman diagram of the ZZ-channel. The figure shows a diagram resembling that of the WZ-channel but with two Z-bosons. In this case the most relevant process for this analysis is the on where one of the Z-bosons decays into a pair of charged leptons and the other decays into a pair of neutral leptons. 
+In figure \ref{fig:ZZ} I have drawn the Feynman diagram of the ZZ-channel. The figure shows a diagram resembling that of the WZ-channel but with two Z-bosons. In this case the most relevant process for this analysis is the on where one of the Z-bosons decays into a pair of charged leptons and the other decays into a pair of neutral leptons. 
 \begin{figure}[H]
     \centering
     \begin{tikzpicture}
@@ -484,9 +528,9 @@ Using our new estimator $h_m$, we can now define a new model as
 \end{align}
 The XGBoost \cite{XGB} framework used in this analysis enables a gradient-boosted algorithm, and was initially created for the Higgs ML challenge. Since the challenge, XGBoost has become a favorite for many in the ML community and has later won many other ML challenges. XGBoost often outperforms ordinary decision trees, but what is gains in results it looses in interpretability. A single tree can easily be analysed and dissected, but when the number of trees increases this becomes harder. 
 \subsection{Discovery and exclusion}
-As mentioned in previous sections, the main idea of the search is to define a region where we will compare the MC-background to the data and analyse any differences. Any analysis in the signal region hopes to either discovery or exclude certain BSM physics. The usual way of doing so is through statistics. In this rapport the statistical analysis will not be the focus and will therefore not be explained in heavy detail. Nonetheless there are certain expressions and terms that must still be defined.
+As mentioned in previous sections, the main idea of the search is to define a region where we will compare the MC-background to the data and analyse any differences. Any analysis in the signal region hopes to either discovery or exclude certain BSM physics. The usual way of doing so is through statistics. In this rapport the statistical analysis will not be the focus and will therefore not be explained in heavy detail. Nonetheless there are certain expressions and terms that must be defined.
 \\
-In the sake of a discovery one would hope to see an excess in the data, measure its significance and find the model best fitting to the excess. A significance of a discovery is measured by the relation between the background and the apparent signal. Given a signal region with $n_{obs}$ events of real data and b events of MC background, we can define the signal as $s = n_{obs}-b$. Then a significance of any signal, $Z$ is defined as 
+For the sake of a discovery one would hope to see an excess in the data, measure its significance and find the model best fitting to the excess. A significance of a discovery is measured by the relation between the background and the apparent signal. Given a signal region with $n_{obs}$ events of real data and b events of MC background, we can define the signal as $s = n_{obs}-b$. Then a significance of any signal, $Z$ is defined as 
 \begin{align}
     Z = \frac{n_{obs}-b}{\sqrt{b}},
 \end{align}
@@ -505,7 +549,7 @@ The probability of model predicting $s$ signal events in the signal region, give
 \begin{align}\label{eq:bays}
     P(s|n_{obs}) = \frac{P(n_{obs}|s)P(s)}{P(n_{obs})}
 \end{align}
-Approximating the probability distribution with a Poisson distribution we can define this probability as
+Approximating the probability distribution with a Poisson distribution\footnote{The significance is defined in the limit where the Poisson approximates a Gaussian distribution.} we can define this probability as
 \begin{align}\label{eq:Pns}
     P(n_{obs}|s) = L(n_{obs},s) = (s+b)^{n_{obs}} \frac{e^{-(s+b)}}{n_{obs}!},
 \end{align}
@@ -533,9 +577,9 @@ The cuts in the analysis are all chosen by me, although some are inspired by the
 \subsection{Cuts and signal regions}
 In this rapport I will define 2 signal regions. Both signal regions will have a common base, which I will call the analysis region (AR). The AR will be defined making relatively loose cuts on the variables of the MC. This region will aim to remove unnecessary background processes and at the same time keep as much of the signal as possible, around $20-60\%$. The hope of these cuts is to leave only signal and irreducible background events left.
 \\
-The first signal region (SR1), will use AR as a base and add an additional cut from the ML output.  This region will be used in the statistical analysis for any results produced from our ML-model. The second signal region (SR2) will also use AR as a base, but will add additional cuts on the variables. These cuts will be much stricter to remove as much irreducible background as possible, and will as a consequence remove a larger amount of signal than both SR1 and SR2.  Finally we will compare the two signal regions.
+The first signal region (SR1), will use AR as a base and add an additional cut from the ML output.  This region will be used in the statistical analysis for any results produced from our ML-model. The second signal region (SR2) will also use AR as a base, but will add additional cuts on the variables. These cuts will be much stricter to remove as much irreducible background as possible, and will as a consequence remove a larger amount of signal than AR. Finally we will compare the two signal regions.
 \subsection{Data handling}\label{sec:DH}
-For training and testing of the XGBoost classifier I created three data sets; one training, one validation and one test. All the data sets are based on the AR (\ref{table:AR}). The training set consisted of $80\%$ of the MC, saving the remaining $20\%$ for validation. Given the large amount of background, the data (both training and validation) was scaled such that the sum of the weights were equal for signal and background. This was done to ensure a realistic representation of the background data as well as making sure that the classifier is given a sufficient amount of signal. The final data set (testing) consisted of all the background data and is used to visualize the the classifiers ability to act on all the SM MC.
+For training and testing of the XGBoost classifier I created three data sets; one training, one validation and one test. All the data sets are based on the AR (\ref{table:AR}). The training set consisted of $80\%$ of the MC, saving the remaining $20\%$ for validation. Given the large amount of background, the data (both training and validation) was scaled such that the sum of the weights were equal for signal and background. This was done to ensure a realistic representation of the background data as well as making sure that the classifier is given a sufficient amount of signal. The final data set (testing) consisted of all the background data and is used to visualize the classifiers ability to act on all the SM MC.
 \\
 Additional to the imbalanced data set, there was a problem with the weights produced by the MC-simulations, some were negative. The negative weight problem is a well known problem in the world of ML-analysis for HEP, and is a consequence of higher perturbative accuracy. For the purpose of visualising distributions, negative weights are not a problem. But, when using the weights in the training of the classifier, the XGBoost framework will not work. 
 \\
