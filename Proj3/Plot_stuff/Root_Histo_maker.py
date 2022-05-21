@@ -27,6 +27,8 @@ class ROOT_Histo_Maker:
     |        bin_min         --             (int)       : Smallest value for edge in bins.              |
     |        variable_name   --             (string)    : Name of variable to be plotted.               |
     |        y_scale         --             (string)    : String to set scale of y-axis.                |
+    |        y_max           --             (float)     : Float to decide y-axis max value.             |
+    |        y_min           --             (float)     : Float to decide y-axis min value.             |
     |        default_pallet  --             (bool)      : Decide to use dedualt plotting settings       |
     |                                                     or not.                                       |
     |        saveAs          --             (string)    : Name to save figure as. If argument not given |
@@ -47,6 +49,7 @@ class ROOT_Histo_Maker:
                 variable_name = "",
                 y_scale = "log",
                 y_max = None,
+                y_min = None,
                 default_pallet = True,
                 saveAs = None,
                 show = True):
@@ -61,6 +64,7 @@ class ROOT_Histo_Maker:
         self.variable_name = variable_name
         self.y_scale = y_scale
         self.y_max = y_max
+        self.y_min = y_min
         self.default_pallet = default_pallet
         self.saveAs = saveAs
         self.show = show
@@ -90,14 +94,16 @@ class ROOT_Histo_Maker:
                                          histtype = "barstacked", 
                                          stacked = True, 
                                          label = self.channel_labels)
-        self.ax1.scatter(x, N, c = "black", label = "Data")
-        self.ax1.legend(fontsize=12)
+        self.ax1.scatter(x, N, c = "black", label = "Data",zorder = 100)
+        self.ax1.legend(fontsize=14)
         if self.y_max != None:
             self.ax1.set_ylim(top = self.y_max)
+        if self.y_min != None:
+            self.ax1.set_ylim(bottom = self.y_min)
         self.ax1.set_xlim([bins[0], bins[-1]])
         n = self.calcN(bins, self.MC_Weights, self.MC_Data)
 
-        self.ax2.scatter(x , N/n, c = "k", alpha = 1, s = 20, zorder = 100)
+        self.ax2.scatter(x , N/n, c = "k", alpha = 1, s = 20)
         self.ax2.axhline(1, linestyle = "--", c = "k", alpha = 0.7, linewidth = 1)
         self.ax2.set_xlabel(self.variable_name, fontsize=16, loc = "right")
         self.ax2.set_xlim([bins[0], bins[-1]])
