@@ -14,7 +14,7 @@
 \usepackage{lipsum}
 \usepackage[english]{babel}
 \usepackage[export]{adjustbox}[2011/08/13]
-\usepackage{biblatex}
+\usepackage[sorting=none, style=nature]{biblatex}
 \addbibresource{Reference.bib}
 \usepackage[flushleft]{threeparttable}
 \usepackage{array,booktabs,makecell}
@@ -597,7 +597,7 @@ Features surrounding the jets were kept to a minimum. The only feautres regardin
 For the case of this rapport, no gridsearch was used in finding hyper-parameters for the XGBoost-classifier. This was a conscious decision based on two reason. Firstly the data set used in this analysis is very large. Any gridsearch that would have any hope of finding optimal parameters would be very time consuming. Secondly the algorithm behind boosting, and especially in the XGBoost framework often means that the parameters in the classifier are not as crucial as in other methods such as deep networks. It is an unproven phenomenon that the XGBoost-classifier often prefers its default settings (see \cite{XGB} for full description). Therefore most of these parameters were used in the rapport with a couple exceptions.
 \\
 Some of the parameters were changed to either make the classifier faster, or based on previous experience i similar analysis. Firstly the learning rate was changed to $0.1$. Secondly the $max\_depth$ of the classifier was changed to 3. Finally the weights of the classifier was set to the sum of the weights of signal divided by the sum of the weights of background. This was done as a suggestion by the XGBoost-contributors. Given the scaling of the weights this factor will be 1. 
-\section{Results and discussion}
+\section{Results $\&$ Discussion}
 \subsection{Monte Carlo and Data}\label{subsec:MCandData}
 Given the main idea of the search is to compare MC to real data, one must first make sure that the MC in-fact resembles the real data. To do so I have plotted the distribution of 9 variables. In addition I plot the ratio of real data divided by MC for each bin. For the purpose of justifying the cuts made for AR and SR1 the contribution of SUSY signal is included in the distribution plot, but given the small amount of signal it will not effect the comparison. However the SUSY signal is not included in the ratio plot.
 \\
@@ -681,7 +681,7 @@ and 60GeV \ref{fig:Cuts_jet60} and the number of events with same or opposite si
          \label{fig:Cuts_isOS}
      \end{subfigure}
     }
-    \caption{The distribution of nr of B-jets \ref{fig:Cuts_bTag}, jets with a transverse momentum above 20[GeV] \ref{fig:Cuts_jet20}  and 60[GeV] \ref{fig:Cuts_jet60} and the number of lepton pairs with opposite or equal charge \ref{fig:Cuts_isOS} for the MC and real data. Additionally the ratio of data over MC is plotted under each distribution histogram.}
+    \caption{The distribution of nr of B-jets (efficiency $80\%$) \ref{fig:Cuts_bTag}, jets with a transverse momentum above 20[GeV] \ref{fig:Cuts_jet20}  and 60[GeV] \ref{fig:Cuts_jet60} and the number of lepton pairs with opposite or equal charge \ref{fig:Cuts_isOS} for the MC and real data. Additionally the ratio of data over MC is plotted under each distribution histogram.}
     \label{fig:var2}
 \end{figure}
 \newpage
@@ -832,7 +832,7 @@ As was briefly mentioned in section \ref{subsec:WZjets}, the W/Z+jets-channels a
 \title{TBD}
 {\tabcolsep=20pt
 \begin{table}
-    \caption{Events analsysis of MC in total and in SR1}
+    \caption{Events analsysis of MC in AR and in SR1}
     \centering 
     \begin{threeparttable}
     \makebox[\linewidth][c]{%
@@ -897,7 +897,7 @@ The results from defining the new region SR2 are presented in table \ref{table:S
 \title{TBD}
 {\tabcolsep=20pt
 \begin{table}
-    \caption{Events analysis of MC in total and in SR2}
+    \caption{Events analysis of MC in AR and in SR2}
     \label{table:SR2_R}
     \centering 
     \begin{threeparttable}
@@ -926,7 +926,7 @@ The results from defining the new region SR2 are presented in table \ref{table:S
 \end{table}
 }
 \egroup
-\subsection{Discovery or exclusion}
+\subsection{Discovery or exclusion}\label{subsec:DoE}
 Given the structure of the data in the analysis, I was not able to preserve any information surrounding the uncertainty of the data. Instead, I have chosen to add a $5\%$ uncertainty to any MC background data in the signal regions. This uncertainty was used both for the significance and the limits. Given the arbitrary nature of choosing $5\%$, the results in the analysis will not be absolute.
 \\
 In table \ref{table:SR1_SR2} I have written the resulting MC-background and data in both SR1 and SR2, along with the resulting significance. The Significance was calculated using equation \ref{eq:Z}. From the table we see that both SR1 and SR2 cut a relatively similar amount of events for both MC and data. SR1 achieved a significance of 0.25 whereas SR2 achieved a significance of 1.20, which are both far from 5. Neither of the regions found a deviation between the MC and data worth any further search as far as discovery is concerned.
@@ -968,29 +968,29 @@ In table \ref{table:eff} I displayed the number of signal events in each region 
     \begin{tabular}{ccc}
     \textbf{Masses[GeV]} &  \textbf{Events in SR1 [efficiency]} & \textbf{Events in SR2 [efficiency]}  \\
      \midrule\midrule
-    $m_{\tilde{l}} = 100$, $m_{\tilde{\chi}} = 50$   & 461 [0.173]  & 105 [0.028]   \\%new row
+    $m_{\tilde{l}} = 100$, $m_{\tilde{\chi}} = 50$   & 554 [0.148]  & 105 [0.028]   \\%new row
     \cmidrule(l  r ){1-3}
-     $m_{\tilde{l}} = 100.5$, $m_{\tilde{\chi}}  = 1$ & 913 [0.280] &  239 [0.057]  \\ 
+     $m_{\tilde{l}} = 100.5$, $m_{\tilde{\chi}}  = 1$ & 1075 [0.260] &  239 [0.057]  \\ 
     \cmidrule(l r ){1-3}
-    $m_{\tilde{l}} = 200$, $m_{\tilde{\chi}}  = 100$ & 144 [0.461] & 37 [0.100]  \\ 
+    $m_{\tilde{l}} = 200$, $m_{\tilde{\chi}}  = 100$ & 159 [0.431] & 37 [0.100]  \\ 
     \cmidrule(l r ){1-3}
 
-    $m_{\tilde{l}} = 200.5$, $m_{\tilde{\chi}} = 1$  & 203 [0.571] & 30 [0.075]   \\% end of rows
+    $m_{\tilde{l}} = 200.5$, $m_{\tilde{\chi}} = 1$  & 210 [0.529] & 30 [0.075]   \\% end of rows
     \cmidrule(l r ){1-3}
     
-    $m_{\tilde{l}} = 300$, $m_{\tilde{\chi}}  = 200$  & 30 [0.484] &   7 [0.102] \\
+    $m_{\tilde{l}} = 300$, $m_{\tilde{\chi}}  = 200$  & 33 [0.455] &   7 [0.102] \\
     \cmidrule(l r ){1-3}
     
-    $m_{\tilde{l}} = 300.5$, $m_{\tilde{\chi}}  = 1$  & 37 [0.529]  &   2 [0.032] \\
+    $m_{\tilde{l}} = 300.5$, $m_{\tilde{\chi}}  = 1$  & 37 [0.486]  &   2 [0.032] \\
     \cmidrule(l r ){1-3}
     
-    $m_{\tilde{l}} = 400$, $m_{\tilde{\chi}}  = 300$  & 8 [0.484]  &   2 [0.093] \\
+    $m_{\tilde{l}} = 400$, $m_{\tilde{\chi}}  = 300$  & 9 [0.450]  &   2 [0.093] \\
     \cmidrule(l r ){1-3}
     
-    $m_{\tilde{l}} = 500$, $m_{\tilde{\chi}}  = 100$  & 3 [0.523] &   0 [0.000] \\
+    $m_{\tilde{l}} = 500$, $m_{\tilde{\chi}}  = 100$  & 4 [0.454] &   0 [0.000] \\
     \cmidrule(l r ){1-3}
     
-    $m_{\tilde{l}} = 500$, $m_{\tilde{\chi}}  = 100$  &  2 [0.475] &   0 [0.000] \\
+    $m_{\tilde{l}} = 500$, $m_{\tilde{\chi}}  = 100$  &  2 [0.287] &   0 [0.000] \\
     \cmidrule(l r ){1-3}
     
     $m_{\tilde{l}} = 500.5$, $m_{\tilde{\chi}}  = 1$  & 2 [0.491]  &   0 [0.000] \\
@@ -1017,7 +1017,7 @@ In table \ref{table:eff} I displayed the number of signal events in each region 
 \egroup
 Using the number of events and efficiency I calculated the limits for each off the mass pair. To visualize the reult I created two plots for each of the regions. The plots visualize the limits for each pair both for a $95\%$ and $87\%$ confidence. Any mass pair with a cross section above any of the aforementioned lines, is excluded up to that confidence. 
 \\
-In figure \ref{fig:ExlusionSR1} I plotted the result for SR1. From the figure we observe that one of the mass pairs are excluded up to $95\%$ confidence, namely the pair with a slepton mass of $100.5$GeV and nautralino mass of $1$GeV. The rest of the mass pairs were not excluded up to the same degree of confidence, although one was nearly excluded up to $87\%$ confidence (200.5Gev and 1GeV). We observe that only the pairs with lower slepton mass are close to being excluded. The higher mass pair are far from it. This indicates the results are effected by low statistics. Given the analyse was made with an integrated luminosity of $10fb^{-1}$, a new analysis with higher luminosity's could lead to more conclusive results.
+In figure \ref{fig:ExlusionSR1} I plotted the result for SR1. From the figure we observe that one of the mass pairs are excluded up to $95\%$ confidence, namely the pair with a slepton mass of $100.5$GeV and nautralino mass of $1$GeV. The rest of the mass pairs were not excluded up to the same degree of confidence, although one was nearly excluded up to $87\%$ confidence (200.5Gev and 1GeV). We observe that only the pairs with lower slepton mass are close to being excluded. The higher mass pairs (slepton mass > 300GeV) are orders of magnitude off. This indicates the results are effected by low statistics. Given the analyse was made with an integrated luminosity of $10fb^{-1}$, a new analysis with higher luminosity's could lead to more conclusive results.
 \\
 \begin{figure}
     \makebox[\linewidth][c]{%
@@ -1046,11 +1046,13 @@ In figure \ref{fig:ExlusionSR2} I plotted the results from SR2. The figure shows
     \caption{Caption}
     \label{fig:my_label}
 \end{figure}
-By comparing SR1 and SR2 we can observe that the rectangle-cut only approach in SR2 resulted in a signal efficiency that heavily effected any possibility of drawing any conclusion from the analysis. The combination of loose rectangle cuts and ML cut was able to preserve enough events to conclusively exclude one mass pair. 
+By comparing results from SR1 and SR2 we can observe that the rectangle-cut only approach in SR2 resulted in a signal efficiency that heavily effected any possibility of drawing any conclusion from the analysis. The combination of loose rectangle cuts and ML cut was able to create a signal region which efficiently separates background and signal and preserves enough events to conclusively exclude one mass pair. 
 \subsection{The way forward}
 In this section I will discuss possible improvements to the analysis. The first and most obvious way of improving the search is by attaining more data. Most data sets today have a luminosity of more than 10-times the amount used in this analysis. By comparing the figures \ref{fig:ExlusionSR1} and \ref{fig:ExlusionSR2} we can observe that there is too little data to exclude or discover any of the lower mass sleptons. Additionally more data features regarding the jets would allow me to better reduce the jet-heavy channels like W/Z+jets or ttbar. 
 \\
-As for the search itself, the way forward would be to define individual signal regions for each mass pair. For the sake of comparing between SR1 and SR2, one signal region was chosen for each method. An individual signal region would improve signal efficiency for each pair and lead to better analysis. 
+As mentioned in mentioned in section \ref{subsec:DoE}, the choice of $5\%$ was rather arbitrary. While setting the uncertainty in the calculations of the limits, I noticed that the uncertainty heavily effected the results. Therefore, before any objective results can reached, the real uncertainty of the data and MC background must be added in the analysis.
+\\
+As for the search itself, the way forward would be to define individual signal regions for each mass pair. For the sake of comparing between SR1 and SR2, one signal region was chosen for each method. I suspect that applying individual signal regions would drastically improve signal efficiency for each pair and lead to better analysis. 
 \\
 Finally there is the problem of the negative weights. For the sake of this rapport I chose the simplest solution, namely to preserve the total sum of the weights. In doing so I risk loosing information regarding the distribution of events in individual regions in the feature space. An alternative method called cell resampling (found in an article by Jeppe R. Andersen, Andreas Maier \cite{cell}), suggests a method which would aim to treat small pockets in the phase space ("cell") individually. This would better preserve information in the data and could lead to more accurate results.
 \section{Conclusion}

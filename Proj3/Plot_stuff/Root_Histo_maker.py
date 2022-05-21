@@ -114,7 +114,6 @@ class ROOT_Histo_Maker:
 
 
     def calcN(self, bins, weight, values):
-        import numpy as np
         s = 0
         n = []
         for j in range(len(bins)-1):
