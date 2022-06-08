@@ -1,0 +1,46 @@
+\begin{tikzpicture}
+    \begin{feynman}[scale=1.5,transform shape]
+        \vertex at (-1.75, 1.1) (i1) {\(P\)};
+        \vertex at (-1.5, 1.) (i2);
+        \vertex at (-1.525, 0.9) (i3) ;
+        \vertex at (0.18, 1.1)  (a1);
+        \vertex at (0.5, 1.) [blob] (a2) {\contour{white}};
+        \vertex at (0.18, 0.9) (a3);
+        
+        \vertex at (-1.75, -1.1) (i4) {\(P\)};
+        \vertex at (-1.5, -1.) (i5);
+        \vertex at (-1.525, -0.9) (i6) ;
+        \vertex at (0.18, -1.1)  (a4);
+        \vertex at (0.5, -1.) [blob] (a5) {\contour{white}};
+        \vertex at (0.18, -0.9) (a6);
+        
+        \vertex at (1.25, 0.0) (c);
+        \vertex at (3., 0.0) (d);
+        \vertex at (1,-0.5) (b);
+        
+        \vertex at (3.5, 1.) (f1) ;
+        \vertex at (3.5,-1.) (f2);
+        \vertex at (5.5, 1.5) (f3) {\(l^-\)};
+        \vertex at (5.5, 0.5) (f4) {\(\tilde{\chi}_1^0\)};
+        \vertex at (5.5, -0.5) (f5) {\(\tilde{\chi}_1^0\)};
+        \vertex at (5.5, -1.5) (f6) {\(l^+\)};
+        
+    \diagram*{
+        (i1) -- [lepton] (a1) ,
+        (i2) -- [fermion] (a2) [blob],
+        (i3) -- [lepton] (a3), 
+        (a2) -- [fermion] (c) -- [boson] (d),
+        (i4) -- [lepton] (a4) ,
+        (i5) -- [fermion] (a5) [blob],
+        (i6) -- [lepton] (a6), 
+        (a5) -- [anti fermion] (c) -- [boson, edge label = {$Z,\gamma$}] (d),
+        (d) -- [fermion, edge label =\(\tilde{l}^-\) ] (f1),
+        (d) -- [anti fermion, edge label =\(\tilde{l}^+\) ] (f2),
+        (f1) -- [fermion] (f3),
+        (f1) -- [ghost] (f4),
+        (f2) -- [anti fermion] (f6),
+        (f2) -- [ghost] (f5),
+        ;
+    };
+    \end{feynman}
+    \end{tikzpicture}
