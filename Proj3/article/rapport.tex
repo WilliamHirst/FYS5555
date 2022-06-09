@@ -48,7 +48,7 @@
 
 \vspace{1cm}
 
-{\Large Searching for two direct sleptons in a dilepton final states using supervised machine learning}
+{\Large Searching for slepton pair production in a dilepton final state using supervised machine learning}
 
 \vspace{1.5cm}
 
@@ -110,7 +110,7 @@
     \end{tikzpicture}
 \end{figure}
 
-\vfill
+
 
 {\itshape University of Oslo}
 \end{titlepage}
@@ -140,7 +140,7 @@ In most attempts to search for BSM-physics the basic idea is to choose a new mod
 \subsection{Super symmetry}\label{sec:SUSY}
 A supersymmetric theory has for many years been an interesting candidate for a new physics beyond the standard model. Supersymmetry (SUSY) aims to alter the standard model such that mass and force is treated equally. Supersymmetry suggests that each SM particle has an additional superpartner(SP) which we call a sparticle. The sparticles all differ with half a spin from the original SM particle. Because SUSY is a broken symmetry, sparticles are expected to be much higher than the corresponding SM masses, often in the range of 100-1000GeV. The difference in spin means that the SP of a fermion is a boson and the SP of a boson is a fermion. SUSY is a candidate to fix many problems in physics, some of which are; the hierarchy problem, fixing the mass of the higgs and possibly the mystery of dark matter.
 \\
-In this analysis I have chosen to search for supersymmetry through the signal of two direct sleptons decaying to a lepton and a neutralino. The process closely resembles the Drell-Yan production, but with additional neutralinos. The direct slepton-diagram is shown in figure \ref{fig:signal_f}. In the rapport only the sleptons $\tilde{e}$ and $\tilde{\mu}$ (SP of ${e}$ and ${\mu}$) will be considered.
+In this analysis I have chosen to search for supersymmetry through the signal of two direct sleptons decaying to a lepton and a neutralino. The neutralino is a neutral sparticle and is the lightest neutralino in the Minimal Supersymmetric Standard Model. The process closely resembles the Drell-Yan production, but with additional neutralinos. The direct slepton-diagram is shown in figure \ref{fig:signal_f}. In the rapport only the sleptons $\tilde{e}$ and $\tilde{\mu}$ (SP of ${e}$ and ${\mu}$) will be considered.
 \\
 \begin{figure}[H]
     \centering
@@ -547,8 +547,9 @@ In exclusion we are interested in studying the probability of a model which pred
 \\
 The probability of model predicting $s$ signal events in the signal region, given $n_{obs}$ event of real data is in bayesian statistics written as
 \begin{align}\label{eq:bays}
-    P(s|n_{obs}) = \frac{P(n_{obs}|s)P(s)}{P(n_{obs})}
+    P(s|n_{obs}) = \frac{P(n_{obs}|s)P(s)}{P(n_{obs})},
 \end{align}
+where P(a|b) means the probability of a given b.\\
 Approximating the probability distribution with a Poisson distribution\footnote{The significance is defined in the limit where the Poisson approximates a Gaussian distribution.} we can define this probability as
 \begin{align}\label{eq:Pns}
     P(n_{obs}|s) = L(n_{obs},s) = (s+b)^{n_{obs}} \frac{e^{-(s+b)}}{n_{obs}!},
@@ -573,7 +574,7 @@ Using equation \ref{eq:bays}, \ref{eq:Pns}, \ref{eq:sb} and marginalizing for al
 \end{align}
 where N is a normalization constant. The probability is now dependant on the signal cross section. To calculate expressions as the ones above and to find $s_{up}$ Monte carlo integration must be used. In this rapport I used the statistical framework created by Magnar Kopangen Bugge in the statisticsNotebook to calculate all limits.
 \section{Implementation}
-The cuts in the analysis are all chosen by me, although some are inspired by the work of Eirik Gramstad in his thesis from 2013 \cite{Gramstad:2013loc}.
+The cuts in the analysis are all chosen by me, although some are inspired by the work of Eirik Gramstad in his thesis from 2013 \cite{Gramstad:2013loc}. Additionally all the data in this rapport apply the standard selection requirements for electrons and muons discussed in the ATLAS review of the open data from 2020 \cite{ATL-OREACH-PUB-2020-001} (table 3, page.7).
 \subsection{Cuts and signal regions}
 In this rapport I will define 2 signal regions. Both signal regions will have a common base, which I will call the analysis region (AR). The AR will be defined making relatively loose cuts on the variables of the MC. This region will aim to remove unnecessary background processes and at the same time keep as much of the signal as possible, around $20-60\%$. The hope of these cuts is to leave only signal and irreducible background events left.
 \\
@@ -590,7 +591,7 @@ How one chooses to deal with this problem can heavily effect results and many so
 \end{align}
 where $w_i$ is the weight of an event i, $i \in [0,N-1]$ and N equals the total number of events.
 \subsection{Features}
-The data set used in training the classifier consisted of 34 features. Most of the features were taken directly from the data and are presented in table 4 page 34 in the ATLAS review of the open data from 2020 \cite{ATL-OREACH-PUB-2020-001}. All features surrounding the leptons (branch names beginning with lep) are included in the data set as well as missin energy (branch names beginning with met). Additionally the dilepton mass was included as well as the stransverse mass. The stransverse mass was calculated using a MT2 calculater develpoed by Christopher G. Lester and Benjamin Nachman \cite{Lester_2015}.
+The data set used in training the classifier consisted of 34 features. Most of the features were taken directly from the data and are presented in table 4 page 34 in the ATLAS review of the open data from 2020 \cite{ATL-OREACH-PUB-2020-001}. All features surrounding the leptons (branch names beginning with lep) are included in the data set as well as missin energy (branch names beginning with met). Additionally the dilepton mass was included as well as the stransverse mass. The stransverse mass was calculated using a MT2 calculator developed by Christopher G. Lester and Benjamin Nachman \cite{Lester_2015}.
 \\
 Features surrounding the jets were kept to a minimum. The only feautres regarding the jets inform of the the total number of jets above a certain transverse momentum threshold (20 and 60GeV), as well as the number of b-jets as classified by a ML-algorithm up to different accuracy's.
 \subsection{The XGBoost-classifier}
@@ -1015,7 +1016,7 @@ In table \ref{table:eff} I displayed the number of signal events in each region 
 \end{table}
 }
 \egroup
-Using the number of events and efficiency I calculated the limits for each off the mass pair. To visualize the reult I created two plots for each of the regions. The plots visualize the limits for each pair both for a $95\%$ and $87\%$ confidence. Any mass pair with a cross section above any of the aforementioned lines, is excluded up to that confidence. 
+Using the number of events and efficiency I calculated the limits for each off the mass pair. To visualize the result I created two plots for each of the regions. The plots visualize the limits for each pair both for a $95\%$ and $87\%$ confidence. Any mass pair with a cross section above any of the aforementioned lines, is excluded up to that confidence. 
 \\
 In figure \ref{fig:ExlusionSR1} I plotted the result for SR1. From the figure we observe that one of the mass pairs are excluded up to $95\%$ confidence, namely the pair with a slepton mass of $100.5$GeV and nautralino mass of $1$GeV. The rest of the mass pairs were not excluded up to the same degree of confidence, although one was nearly excluded up to $87\%$ confidence (200.5Gev and 1GeV). We observe that only the pairs with lower slepton mass are close to being excluded. The higher mass pairs (slepton mass > 300GeV) are orders of magnitude off. This indicates the results are effected by low statistics. Given the analyse was made with an integrated luminosity of $10fb^{-1}$, a new analysis with higher luminosity's could lead to more conclusive results.
 \\
@@ -1023,10 +1024,10 @@ In figure \ref{fig:ExlusionSR1} I plotted the result for SR1. From the figure we
     \makebox[\linewidth][c]{%
      \centering
      \begin{subfigure}[b]{\textwidth}
-         \includegraphics[width=\textwidth]{Figures/Results/ExlusionEvents.pdf}
+         \includegraphics[width=\textwidth]{Figures/Results/ExclusionEvents.pdf}
      \end{subfigure}
      }
-     \caption{Visualization of crossection of each mass-pair in SR2 with each corresponding exclusion limit up to $95\%$ and $87\%$.}
+     \caption{Visualization of crossection of each mass-pair in SR1 with each corresponding exclusion limit up to $95\%$ and $87\%$.}
      \label{fig:ExlusionSR1}
 \end{figure}
 In figure \ref{fig:ExlusionSR2} I plotted the results from SR2. The figure shows that none of the mass pairs were excluded. The closest mass pair to be excluded is the pair of 100.5GeV slepton mass and 1GeV neutralino mass, though the cross section of the pair is still an order of 10 away. By comparison with the results from SR1, the results from SR2 are far less conclusive. Additionally we can observe from the figure that the decrease in efficiency has increased the limits by a factor of 10, requiring far more statistics to make any conclusive statements about the data. \\
