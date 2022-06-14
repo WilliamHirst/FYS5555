@@ -64,7 +64,7 @@ class ROOT_Histo_Maker:
         self.Data = Data
         self.nr_bins = nr_bins
         self.bin_max = bin_max
-        self.bin_min = bin_MIN
+        self.bin_min = bin_min
         self.variable_name = variable_name
         self.y_scale = y_scale
         self.y_max = y_max
